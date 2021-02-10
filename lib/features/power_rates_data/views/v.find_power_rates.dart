@@ -1,9 +1,22 @@
+import 'dart:convert';
+
+import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/power_rates_data/widgets/w.power_rate_tile.dart';
 import 'package:atlok/features/power_rates_data/widgets/w.search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class VFindPowerRates extends StatelessWidget {
+class VFindPowerRates extends StatefulWidget {
+  @override
+  _VFindPowerRatesState createState() => _VFindPowerRatesState();
+}
+
+class _VFindPowerRatesState extends State<VFindPowerRates> {
+  List<MPowerRate> _powerRates = new List();
+  int _nextStart = -1;
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -31,7 +44,21 @@ class VFindPowerRates extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    WSearchBar(),
+                    WSearchBar(
+                      afterFind: (http.Response response) {
+                        var dJSON = json.decode(response.body);
+
+                        setState(() {
+                          _nextStart = dJSON["NextStart"];
+                          _powerRates = dJSON["Data"]
+                              .map<MPowerRate>(
+                                (json) => MPowerRate.fromJson(json),
+                              )
+                              .toList();
+                        });
+                      },
+                      beforeFind: () {},
+                    ),
                     VSpacing(TSpacing * 2),
                     WTextDivider(
                       text: "Hasil Pencarian",
@@ -40,7 +67,9 @@ class VFindPowerRates extends StatelessWidget {
                     VSpacing(TSpacing * 2),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: WCustomerList(),
+                        child: WPowerRateList(
+                          powerRates: _powerRates,
+                        ),
                       ),
                     )
                   ],
@@ -62,6 +91,26 @@ class VFindPowerRates extends StatelessWidget {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class WPowerRateList extends StatelessWidget {
+  final List<MPowerRate> powerRates;
+  const WPowerRateList({
+    Key key,
+    @required this.powerRates,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        powerRates.length,
+        (index) => WPowerRateTile(
+          powerRate: powerRates[index],
         ),
       ),
     );
