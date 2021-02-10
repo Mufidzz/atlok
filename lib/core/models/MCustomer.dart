@@ -2,9 +2,10 @@ class MCustomer {
   int iD;
   String iDPEL;
   String fullName;
+  String address;
   String poleNumber;
-  String substationID;
-  String powerRatingID;
+  int substationID;
+  int powerRatingID;
   String kWHNumber;
   String kWHBrand;
   String kWHYear;
@@ -16,6 +17,7 @@ class MCustomer {
       {this.iD,
       this.iDPEL,
       this.fullName,
+      this.address,
       this.poleNumber,
       this.substationID,
       this.powerRatingID,
@@ -30,6 +32,7 @@ class MCustomer {
     iD = json['ID'];
     iDPEL = json['IDPEL'];
     fullName = json['FullName'];
+    address = json['Address'];
     poleNumber = json['PoleNumber'];
     substationID = json['SubstationID'];
     powerRatingID = json['PowerRatingID'];
@@ -46,6 +49,7 @@ class MCustomer {
     data['ID'] = this.iD;
     data['IDPEL'] = this.iDPEL;
     data['FullName'] = this.fullName;
+    data['Address'] = this.address;
     data['PoleNumber'] = this.poleNumber;
     data['SubstationID'] = this.substationID;
     data['PowerRatingID'] = this.powerRatingID;

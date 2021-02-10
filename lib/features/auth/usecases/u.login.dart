@@ -34,6 +34,16 @@ class UCLogin {
     );
 
     if (response.statusCode != 200) {
+      if (response.statusCode == 426) {
+        await UDialog(context).showSingleButtonDialog(
+          title: "Login",
+          content: "User Belum Terverifikasi, Kontak Admin",
+          buttonText: "OK",
+        );
+        this.error = response.body;
+        return;
+      }
+
       await UDialog(context).showSingleButtonDialog(
         title: "Login",
         content: "Username / Password Salah",
