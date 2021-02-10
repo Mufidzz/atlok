@@ -1,16 +1,23 @@
+import 'package:atlok/core/models/MCustomer.dart';
+import 'package:atlok/core/routes/routes.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class WCustomerTile extends StatelessWidget {
+  final MACustomer customer;
   const WCustomerTile({
     Key key,
+    @required this.customer,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ExtendedNavigator.root.push(Routes.vCustomerDataDetail);
+      },
       child: Column(
         children: [
           Row(
@@ -34,13 +41,13 @@ class WCustomerTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "12345678901234567890",
+                      "${customer.iDPEL}",
                       style: TTextStyle.normal(
                         color: TColors.primary[3],
                       ),
                     ),
                     Text(
-                      "Nama Lengkap, Tarif Daya",
+                      "${customer.fullName}, ${customer.powerRating.name}",
                       style: TTextStyle.small(
                         color: TColors.primary[3],
                       ),

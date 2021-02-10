@@ -12,7 +12,6 @@ class VPowerRatesForm extends StatefulWidget {
 class _VPowerRatesFormState extends State<VPowerRatesForm> {
   GlobalKey<FormState> _formKey;
   MPowerRate _powerRate;
-  String _passwordConfirmation;
   @override
   void initState() {
     // TODO: implement initState

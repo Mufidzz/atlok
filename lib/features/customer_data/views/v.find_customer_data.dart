@@ -1,12 +1,25 @@
-import 'package:atlok/core/routes/router.gr.dart';
+import 'dart:convert';
+
+import 'package:atlok/core/models/MCustomer.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/customer_data/usecases/u.find_customer_data.dart';
 import 'package:atlok/features/customer_data/widgets/w.search_bar.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class VFindCustomerData extends StatelessWidget {
+class VFindCustomerData extends StatefulWidget {
+  @override
+  _VFindCustomerDataState createState() => _VFindCustomerDataState();
+}
+
+class _VFindCustomerDataState extends State<VFindCustomerData> {
+  List<MACustomer> customers = new List();
+  int nextStart = -1;
+  int totalData = 0;
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -16,6 +29,15 @@ class VFindCustomerData extends StatelessWidget {
           children: [
             AppBar(
               backgroundColor: TColors.primary,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                )
+              ],
               title: Text(
                 "Cari Data",
                 style: TTextStyle.medium(
@@ -34,18 +56,53 @@ class VFindCustomerData extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    WSearchBar(),
+                    WSearchBar(
+                      beforeFind: () {
+                        setState(() {
+                          this.isLoading = true;
+                        });
+                      },
+                      afterFind: (http.Response response) {
+                        var djson = json.decode(response.body);
+                        var _tc = djson["Data"]
+                            .map<MACustomer>(
+                                (json) => MACustomer.fromJson(json))
+                            .toList();
+
+                        setState(() {
+                          this.isLoading = false;
+                          customers = _tc;
+                          this.nextStart = djson["NextStart"];
+                          this.totalData = djson["TotalDataFound"];
+                        });
+                      },
+                    ),
                     VSpacing(TSpacing * 2),
                     WTextDivider(
                       text: "Hasil Pencarian",
                       color: TColors.primary,
                     ),
+                    VSpacing(TSpacing),
+                    Container(
+                      child: Text(
+                        "Jumlah Data : $totalData",
+                        style: TTextStyle.small(
+                          fontWeight: FontWeight.w600,
+                          color: TColors.primary[3],
+                        ),
+                      ),
+                    ),
                     VSpacing(TSpacing * 2),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: WCustomerList(),
+                        child: isLoading
+                            ? CircularProgressIndicator()
+                            : WCustomerList(
+                                customers: this.customers,
+                                nextStart: this.nextStart,
+                              ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

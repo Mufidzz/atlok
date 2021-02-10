@@ -12,7 +12,6 @@ class VSubstationDataForm extends StatefulWidget {
 class _VSubstationDataFormState extends State<VSubstationDataForm> {
   GlobalKey<FormState> _formKey;
   MSubstation _substation;
-  String _passwordConfirmation;
   @override
   void initState() {
     // TODO: implement initState
