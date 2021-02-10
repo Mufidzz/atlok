@@ -4,6 +4,7 @@ class URL {
   static const Register = "$_url/auth/register";
   static const CreateCustomer = "$_url/customer/";
   static const CreateSubstation = "$_url/substation/";
+  static const CreatePowerRate = "$_url/power-rating/";
 }
 
 class SPKey {
