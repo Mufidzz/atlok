@@ -25,19 +25,12 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
     return WSafeArea(
       color: TColors.primary,
       child: Scaffold(
+        endDrawer: WMainDrawer(),
         body: Column(
           children: [
             AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: TColors.primary,
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {},
-                )
-              ],
               title: Text(
                 "Cari Data",
                 style: TTextStyle.medium(

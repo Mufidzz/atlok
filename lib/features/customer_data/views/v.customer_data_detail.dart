@@ -119,6 +119,13 @@ class VCustomerDataDetail extends StatelessWidget {
                         text: "Edit Data",
                         onTap: () {},
                       ),
+                      VSpacing(TSpacing * 2),
+                      WButton(
+                        backgroundColor: TColors.primary,
+                        textColor: TColors.primary[-3],
+                        text: "Ajukan Perubahan",
+                        onTap: () {},
+                      ),
                       VSpacing(TSpacing * 4),
                     ],
                   ),
