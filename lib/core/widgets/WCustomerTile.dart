@@ -36,7 +36,7 @@ class WCustomerTile extends StatelessWidget {
                   aspectRatio: 1 / 1,
                   child: Icon(
                     Icons.person,
-                    color: TColors.primary,
+                    color: TColors.primary[-2],
                   ),
                 ),
               ),

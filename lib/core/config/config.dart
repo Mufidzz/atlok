@@ -9,6 +9,10 @@ class URL {
   // ignore: non_constant_identifier_names
   static SearchCustomer(String param, int start, int count) =>
       "$_url/customer/$param/search/$start/$count";
+
+  // ignore: non_constant_identifier_names
+  static SearchSubstation(String param, int start, int count) =>
+      "$_url/substation/$param/search/$start/$count";
 }
 
 class SPKey {
