@@ -1,6 +1,7 @@
 import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/customer_data/usecases/u.find_customer_data.dart';
 import 'package:atlok/features/customer_data/widgets/w.search_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class VFindCustomerData extends StatelessWidget {
               ),
               child: WButton(
                 onTap: () {
-                  ExtendedNavigator.root.push(Routes.vCustomerDataForm);
+                  UCFindCustomerData.goToCustomerDataForm();
                 },
                 text: "Tambah Data",
                 textColor: TColors.primary[-3],

@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       builder: ExtendedNavigator.builder<RViews>(
         router: RViews(),
-        initialRoute: Routes.vLogin,
+        initialRoute: Routes.vSubstationDataForm,
       ),
     );
   }

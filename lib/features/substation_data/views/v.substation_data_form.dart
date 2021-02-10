@@ -1,8 +1,26 @@
+import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/substation_data/usecases/u.substation_data_form.dart';
 import 'package:flutter/material.dart';
 
-class VSubstationDataForm extends StatelessWidget {
+class VSubstationDataForm extends StatefulWidget {
+  @override
+  _VSubstationDataFormState createState() => _VSubstationDataFormState();
+}
+
+class _VSubstationDataFormState extends State<VSubstationDataForm> {
+  GlobalKey<FormState> _formKey;
+  MSubstation _substation;
+  String _passwordConfirmation;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+    _substation = new MSubstation();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -34,6 +52,7 @@ class VSubstationDataForm extends StatelessWidget {
                     0,
                   ),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -48,10 +67,18 @@ class VSubstationDataForm extends StatelessWidget {
                         WTextField(
                           icon: Icons.workspaces_outline,
                           labelText: "Nomor Gardu",
+                          required: true,
+                          onChanged: (String v) {
+                            this._substation.code = v;
+                          },
                         ),
                         WTextField(
                           icon: Icons.person_outline,
                           labelText: "Nama Gardu",
+                          required: true,
+                          onChanged: (String v) {
+                            this._substation.name = v;
+                          },
                         ),
                         VSpacing(TSpacing * 3),
                         Text(
@@ -65,10 +92,18 @@ class VSubstationDataForm extends StatelessWidget {
                         WTextField(
                           icon: Icons.adjust_rounded,
                           labelText: "Latitude",
+                          required: true,
+                          onChanged: (String v) {
+                            this._substation.latitude = v;
+                          },
                         ),
                         WTextField(
                           icon: Icons.adjust_rounded,
                           labelText: "Longitude",
+                          required: true,
+                          onChanged: (String v) {
+                            this._substation.longitude = v;
+                          },
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
@@ -91,7 +126,18 @@ class VSubstationDataForm extends StatelessWidget {
                           backgroundColor: TColors.primary,
                           textColor: TColors.primary[-3],
                           text: "Simpan",
-                          onTap: () {},
+                          onTap: () async {
+                            if (!_formKey.currentState.validate()) {
+                              return;
+                            }
+
+                            await UCSubstationDataForm(
+                              context,
+                              substation: this._substation,
+                            ).create();
+
+                            _formKey.currentState.reset();
+                          },
                         ),
                         VSpacing(TSpacing * 4),
                       ],
