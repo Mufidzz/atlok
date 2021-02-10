@@ -16,7 +16,12 @@ class WCustomerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        ExtendedNavigator.root.push(Routes.vCustomerDataDetail);
+        ExtendedNavigator.root.push(
+          Routes.vCustomerDataDetail,
+          arguments: VCustomerDataDetailArguments(
+            customer: customer,
+          ),
+        );
       },
       child: Column(
         children: [

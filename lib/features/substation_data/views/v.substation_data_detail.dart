@@ -1,8 +1,14 @@
+import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class VSubstationDataDetail extends StatelessWidget {
+  final MSubstation substation;
+
+  const VSubstationDataDetail({Key key, @required this.substation})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -15,7 +21,9 @@ class VSubstationDataDetail extends StatelessWidget {
               backgroundColor: TColors.primary,
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios_outlined),
-                onPressed: () {},
+                onPressed: () {
+                  ExtendedNavigator.root.pop();
+                },
               ),
               title: Text(
                 "Data Gardu",
@@ -47,13 +55,16 @@ class VSubstationDataDetail extends StatelessWidget {
                       VSpacing(TSpacing * 3),
                       WDataInformationTile(
                         title: "Nomor Gardu",
-                        content: "ABCDE123456789",
+                        content: "${substation.code}",
                       ),
                       WDataInformationTile(
-                        title: "Nama Gardu ",
-                        content: "ABCDE123456789",
+                        title: "Nama Gardu",
+                        content: "${substation.name}",
                       ),
-                      WDataLocation(),
+                      WDataLocation(
+                        latitude: "${substation.latitude}",
+                        longitude: "${substation.longitude}",
+                      ),
                       VSpacing(TSpacing * 4),
                       Text(
                         "Aksi",
