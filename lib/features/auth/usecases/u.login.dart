@@ -7,6 +7,7 @@ import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UCLogin {
@@ -54,8 +55,12 @@ class UCLogin {
     }
 
     this.token = response.body.toString().replaceAll("\"", "");
+
+    Map<String, dynamic> dToken = JwtDecoder.decode(this.token);
+
     var sp = await SharedPreferences.getInstance();
     sp.setString(SPKey.token, this.token);
+    sp.setInt(SPKey.access, dToken["acs"]);
 
     ExtendedNavigator.root.replace(Routes.vFindCustomerData);
   }

@@ -6,6 +6,7 @@ import 'package:atlok/core/models/MUser.dart';
 import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UCUserRegisterVerification {
   final BuildContext context;
@@ -20,6 +21,10 @@ class UCUserRegisterVerification {
   }) async {
     var response = await http.get(
       URL.GetUnverifiedUsers(start, count),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
     );
 
     if (response.statusCode != 200) {

@@ -19,7 +19,6 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
   int totalData = 0;
 
   bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -100,20 +99,23 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(
-                TSpacing * 6,
-                TSpacing * 4,
-                TSpacing * 6,
-                TSpacing * 4,
-              ),
-              child: WButton(
-                onTap: () {
-                  UCFindCustomerData.goToCustomerDataForm();
-                },
-                text: "Tambah Data",
-                textColor: TColors.primary[-3],
-                backgroundColor: TColors.primary,
+            WLeveledWidget(
+              minimumLevel: 1,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(
+                  TSpacing * 6,
+                  TSpacing * 4,
+                  TSpacing * 6,
+                  TSpacing * 4,
+                ),
+                child: WButton(
+                  onTap: () {
+                    UCFindCustomerData.goToCustomerDataForm();
+                  },
+                  text: "Tambah Data",
+                  textColor: TColors.primary[-3],
+                  backgroundColor: TColors.primary,
+                ),
               ),
             )
           ],

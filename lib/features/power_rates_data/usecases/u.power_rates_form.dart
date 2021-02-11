@@ -5,6 +5,7 @@ import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UCPowerRatesForm {
   final MPowerRate powerRate;
@@ -20,6 +21,10 @@ class UCPowerRatesForm {
       body: json.encode(
         powerRate.toJson(),
       ),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
     );
 
     if (response.statusCode != 200) {

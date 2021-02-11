@@ -5,6 +5,7 @@ import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UCSubstationDataForm {
   final MSubstation substation;
@@ -20,6 +21,10 @@ class UCSubstationDataForm {
       body: json.encode(
         substation.toJson(),
       ),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
     );
 
     if (response.statusCode != 200) {
