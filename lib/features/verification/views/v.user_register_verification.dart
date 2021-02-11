@@ -20,8 +20,10 @@ class _VUserRegisterVerificationState extends State<VUserRegisterVerification> {
     UCUserRegisterVerification(context)
         .loadUnverifiedUsers(start: 0, count: 10)
         .then((value) {
-      _users = value.list;
-      _nextStart = value.nextStart;
+      setState(() {
+        _users = value.list;
+        _nextStart = value.nextStart;
+      });
     });
   }
 

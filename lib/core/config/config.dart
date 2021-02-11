@@ -7,8 +7,8 @@ class URL {
   static const CreatePowerRate = "$_url/power-rating/";
 
   // ignore: non_constant_identifier_names
-  static SearchCustomer(String param, int start, int count) =>
-      "$_url/customer/$param/search/$start/$count";
+  static SearchCustomer(String param, int start, int count, {ext = ""}) =>
+      "$_url/customer/$param/search/$start/$count?$ext";
 
   // ignore: non_constant_identifier_names
   static SearchSubstation(String param, int start, int count) =>
@@ -34,6 +34,9 @@ class URL {
   // ignore: non_constant_identifier_names
   static GetUnverifiedUsers(int start, int count) =>
       "$_url/user/unverified/$start/$count";
+
+  // ignore: non_constant_identifier_names
+  static VerifyUser(String id) => "$_url/user/verify/$id";
 }
 
 class SPKey {

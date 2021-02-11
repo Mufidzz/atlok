@@ -32,6 +32,16 @@ class UCRegister {
     );
 
     if (response.statusCode != 200) {
+      if (response.statusCode == 302) {
+        await UDialog(context).showSingleButtonDialog(
+          title: "Daftar",
+          content: "Pendaftaran Gagal, Username Telah Terpakai",
+          buttonText: "OK",
+        );
+        this.error = response.body;
+        return;
+      }
+
       await UDialog(context).showSingleButtonDialog(
         title: "Daftar",
         content: "Pendaftaran Gagal",

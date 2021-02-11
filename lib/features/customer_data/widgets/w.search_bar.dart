@@ -167,7 +167,7 @@ class _WSearchBarState extends State<WSearchBar> {
               count: 10,
             );
 
-            widget.afterFind(r);
+            widget.afterFind(r, _searchParam);
           },
           backgroundColor: TColors.primary,
         ),

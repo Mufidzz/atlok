@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/WButton.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/power_rates_data/usecases/u.find_power_rates.dart';
+import 'package:atlok/features/substation_data/usecases/u.find_substation_data.dart';
 import 'package:atlok/features/substation_data/views/v.find_substation_data.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -149,64 +153,7 @@ class UDialog {
                 width: MediaQuery.of(context).size.width * .8,
                 height: MediaQuery.of(context).size.height * .8,
                 color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      color: TColors.primary,
-                      child: Text(
-                        "Pilih Tarif Daya",
-                        style: TTextStyle.medium(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: TSpacing,
-                        right: TSpacing,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: WTextField(
-                              icon: Icons.search,
-                              labelText: "Kata Kunci",
-                              hintText: "Nama / Kode Tarif Daya",
-                            ),
-                          ),
-                          HSpacing(TSpacing),
-                          WButton(
-                            backgroundColor: TColors.primary,
-                            textColor: TColors.primary,
-                            text: "Cari",
-                            isFilled: false,
-                            width: TSpacing * 15,
-                            height: TSpacing * 10,
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: WPowerRateList(
-                          powerRates: [
-                            new MPowerRate(code: "AAA", name: "BBB"),
-                          ],
-                          onTileTap: (MPowerRate powerRate) {
-                            print(powerRate.name);
-                            Navigator.of(context).pop(powerRate);
-                          },
-                        ),
-                      ),
-                    ),
-                    VSpacing(TSpacing * 2),
-                  ],
-                ),
+                child: LWFindPowerRate(),
               ),
             ),
           ),
@@ -233,71 +180,196 @@ class UDialog {
                 width: MediaQuery.of(context).size.width * .8,
                 height: MediaQuery.of(context).size.height * .8,
                 color: Colors.white,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      color: TColors.primary,
-                      child: Text(
-                        "Pilih Gardu",
-                        style: TTextStyle.medium(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: TSpacing,
-                        right: TSpacing,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: WTextField(
-                              icon: Icons.search,
-                              labelText: "Kata Kunci",
-                              hintText: "Nama / Kode Gardu",
-                            ),
-                          ),
-                          HSpacing(TSpacing),
-                          WButton(
-                            backgroundColor: TColors.primary,
-                            textColor: TColors.primary,
-                            text: "Cari",
-                            isFilled: false,
-                            width: TSpacing * 15,
-                            height: TSpacing * 10,
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: WSubstationList(
-                          substations: [
-                            new MSubstation(
-                              code: "ABCDE",
-                              name: "ABCCDDEE",
-                            ),
-                          ],
-                          onTileTap: (MSubstation substation) {
-                            Navigator.of(context).pop(substation);
-                          },
-                        ),
-                      ),
-                    ),
-                    VSpacing(TSpacing * 2),
-                  ],
-                ),
+                child: LWFindSubstation(),
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class LWFindPowerRate extends StatefulWidget {
+  const LWFindPowerRate({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _LWFindPowerRateState createState() => _LWFindPowerRateState();
+}
+
+class _LWFindPowerRateState extends State<LWFindPowerRate> {
+  List<MPowerRate> _powerRates = new List();
+  String _searchParam = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          alignment: Alignment.center,
+          height: 50,
+          color: TColors.primary,
+          child: Text(
+            "Pilih Tarif Daya",
+            style: TTextStyle.medium(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: TSpacing,
+            right: TSpacing,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: WTextField(
+                  icon: Icons.search,
+                  labelText: "Kata Kunci",
+                  hintText: "Nama / Kode Tarif Daya",
+                  onChanged: (String v) {
+                    _searchParam = v;
+                  },
+                ),
+              ),
+              HSpacing(TSpacing),
+              WButton(
+                backgroundColor: TColors.primary,
+                textColor: TColors.primary,
+                text: "Cari",
+                isFilled: false,
+                width: TSpacing * 15,
+                height: TSpacing * 10,
+                onTap: () {
+                  UCFindPowerRates(context)
+                      .searchPowerRates(
+                    param: _searchParam,
+                    start: 0,
+                    count: 10,
+                  )
+                      .then((v) {
+                    var dJS = json.decode(v.body);
+
+                    setState(() {
+                      _powerRates = dJS["Data"]
+                          .map<MPowerRate>((json) => MPowerRate.fromJson(json))
+                          .toList();
+                    });
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: WPowerRateList(
+              powerRates: _powerRates,
+              onTileTap: (MPowerRate powerRate) {
+                print(powerRate.name);
+                Navigator.of(context).pop(powerRate);
+              },
+            ),
+          ),
+        ),
+        VSpacing(TSpacing * 2),
+      ],
+    );
+  }
+}
+
+class LWFindSubstation extends StatefulWidget {
+  const LWFindSubstation({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _LWFindSubstationState createState() => _LWFindSubstationState();
+}
+
+class _LWFindSubstationState extends State<LWFindSubstation> {
+  List<MSubstation> _substations = new List();
+  String _searchParam = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          alignment: Alignment.center,
+          height: 50,
+          color: TColors.primary,
+          child: Text(
+            "Pilih Gardu",
+            style: TTextStyle.medium(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: TSpacing,
+            right: TSpacing,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: WTextField(
+                  icon: Icons.search,
+                  labelText: "Kata Kunci",
+                  hintText: "Nama / Kode Gardu",
+                  onChanged: (String v) {
+                    _searchParam = v;
+                  },
+                ),
+              ),
+              HSpacing(TSpacing),
+              WButton(
+                backgroundColor: TColors.primary,
+                textColor: TColors.primary,
+                text: "Cari",
+                isFilled: false,
+                width: TSpacing * 15,
+                height: TSpacing * 10,
+                onTap: () {
+                  UCFindSubstationData(context)
+                      .searchSubstation(
+                          param: "$_searchParam", start: 0, count: 10)
+                      .then(
+                    (v) {
+                      var dJS = json.decode(v.body);
+                      setState(() {
+                        _substations = dJS["Data"]
+                            .map<MSubstation>(
+                                (json) => MSubstation.fromJson(json))
+                            .toList();
+                      });
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: WSubstationList(
+              substations: _substations,
+              onTileTap: (MSubstation substation) {
+                Navigator.of(context).pop(substation);
+              },
+            ),
+          ),
+        ),
+        VSpacing(TSpacing * 2),
+      ],
     );
   }
 }

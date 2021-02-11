@@ -28,9 +28,9 @@ class _VCustomerDataChangeVerificationState
     UCCustomerDataChangeVerification(context)
         .loadCustomerChange(start: 0, count: 10)
         .then((value) {
-      this._nextStart = value.nextStart;
-      this._changes = value.list;
       setState(() {
+        this._nextStart = value.nextStart;
+        this._changes = value.list;
         initial = false;
       });
     });

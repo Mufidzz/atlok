@@ -65,7 +65,7 @@ class CustomerForm extends StatefulWidget {
 
 class _CustomerFormState extends State<CustomerForm> {
   GlobalKey<FormState> _formKey;
-  MCustomer _customer;
+  MACustomer _customer;
   MDropdown<MSubstation> _dsSubstation = new MDropdown();
   MDropdown<MPowerRate> _dsPowerRate = new MDropdown();
 
@@ -74,19 +74,10 @@ class _CustomerFormState extends State<CustomerForm> {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
-    _customer = new MCustomer();
-    _dsSubstation = new MDropdown<MSubstation>(values: [
-      new MSubstation(iD: 1, name: "Hello"),
-      new MSubstation(iD: 2, name: "Hello2"),
-      new MSubstation(iD: 3, name: "Hello3"),
-    ]);
-    _dsPowerRate = new MDropdown<MPowerRate>(values: [
-      new MPowerRate(iD: 1, name: "Hello"),
-      new MPowerRate(iD: 2, name: "Hello2"),
-    ]);
-
-    _dsSubstation.selectedValue = _dsSubstation.values.first;
-    _dsPowerRate.selectedValue = _dsPowerRate.values.first;
+    _customer = new MACustomer(
+      substation: new MSubstation(),
+      powerRating: new MPowerRate(),
+    );
   }
 
   @override
@@ -145,16 +136,52 @@ class _CustomerFormState extends State<CustomerForm> {
               this._customer.poleNumber = v;
             },
           ),
-          WDropdownWrapper(
-            prefixIcon: Icons.account_tree_outlined,
-            dropdownButton: substationDropdown(),
-            labelText: "Gardu",
+          VSpacing(TSpacing * 1),
+
+          WButton(
+            backgroundColor: TColors.primary,
+            textColor: TColors.primary,
+            text: _customer.substation.name ?? "Pilih Gardu",
+            onTap: () {
+              UDialog(context).showSubstationSelectDialog().then((v) {
+                if (v != null) {
+                  setState(() {
+                    this._customer.substation = v;
+                    this._customer.substationID = v.iD;
+                  });
+                }
+              });
+            },
+            isFilled: false,
           ),
-          WDropdownWrapper(
-            prefixIcon: Icons.lightbulb_outline,
-            dropdownButton: powerRateDropdown(),
-            labelText: "Tarif Daya",
+          VSpacing(TSpacing * 2),
+
+          WButton(
+            backgroundColor: TColors.primary,
+            textColor: TColors.primary,
+            text: _customer.powerRating.name ?? "Pilih Tarif Daya",
+            onTap: () {
+              UDialog(context).showPowerRateSelectDialog().then((v) {
+                if (v != null) {
+                  setState(() {
+                    this._customer.powerRating = v;
+                    this._customer.powerRatingID = v.iD;
+                  });
+                }
+              });
+            },
+            isFilled: false,
           ),
+          // WDropdownWrapper(
+          //   prefixIcon: Icons.account_tree_outlined,
+          //   dropdownButton: substationDropdown(),
+          //   labelText: "Gardu",
+          // ),
+          // WDropdownWrapper(
+          //   prefixIcon: Icons.lightbulb_outline,
+          //   dropdownButton: powerRateDropdown(),
+          //   labelText: "Tarif Daya",
+          // ),
           VSpacing(TSpacing * 3),
           Text(
             "Data KWH",
@@ -240,8 +267,6 @@ class _CustomerFormState extends State<CustomerForm> {
               }
 
               try {
-                this._customer.powerRatingID = _dsPowerRate.selectedValue.iD;
-                this._customer.substationID = _dsSubstation.selectedValue.iD;
                 this._customer.verified = true;
 
                 await UCCustomerDataForm(

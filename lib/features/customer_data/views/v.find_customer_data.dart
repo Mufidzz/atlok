@@ -17,6 +17,7 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
   List<MACustomer> customers = new List();
   int nextStart = -1;
   int totalData = 0;
+  String searchParam = "";
 
   bool isLoading = false;
   @override
@@ -54,7 +55,7 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
                           this.isLoading = true;
                         });
                       },
-                      afterFind: (http.Response response) {
+                      afterFind: (http.Response response, String searchParam) {
                         var djson = json.decode(response.body);
                         var _tc = djson["Data"]
                             .map<MACustomer>(
@@ -66,6 +67,7 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
                           customers = _tc;
                           this.nextStart = djson["NextStart"];
                           this.totalData = djson["TotalDataFound"];
+                          this.searchParam = searchParam;
                         });
                       },
                     ),
@@ -92,6 +94,7 @@ class _VFindCustomerDataState extends State<VFindCustomerData> {
                             : WCustomerList(
                                 customers: this.customers,
                                 nextStart: this.nextStart,
+                                searchParam: this.searchParam,
                               ),
                       ),
                     ),
