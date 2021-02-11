@@ -1,8 +1,25 @@
+import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/power_rates_data/usecases/u.power_rates_form.dart';
 import 'package:flutter/material.dart';
 
-class VPowerRatesForm extends StatelessWidget {
+class VPowerRatesForm extends StatefulWidget {
+  @override
+  _VPowerRatesFormState createState() => _VPowerRatesFormState();
+}
+
+class _VPowerRatesFormState extends State<VPowerRatesForm> {
+  GlobalKey<FormState> _formKey;
+  MPowerRate _powerRate;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _formKey = GlobalKey<FormState>();
+    _powerRate = new MPowerRate();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -34,6 +51,7 @@ class VPowerRatesForm extends StatelessWidget {
                     0,
                   ),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -48,10 +66,18 @@ class VPowerRatesForm extends StatelessWidget {
                         WTextField(
                           icon: Icons.workspaces_outline,
                           labelText: "Kode Tarif Daya",
+                          required: true,
+                          onChanged: (String v) {
+                            this._powerRate.code = v;
+                          },
                         ),
                         WTextField(
                           icon: Icons.title,
                           labelText: "Nama Tarif Daya",
+                          required: true,
+                          onChanged: (String v) {
+                            this._powerRate.name = v;
+                          },
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
@@ -74,7 +100,17 @@ class VPowerRatesForm extends StatelessWidget {
                           backgroundColor: TColors.primary,
                           textColor: TColors.primary[-3],
                           text: "Simpan",
-                          onTap: () {},
+                          onTap: () async {
+                            if (!_formKey.currentState.validate()) {
+                              return;
+                            }
+                            await UCPowerRatesForm(
+                              context,
+                              powerRate: this._powerRate,
+                            ).create();
+
+                            _formKey.currentState.reset();
+                          },
                         ),
                         VSpacing(TSpacing * 4),
                       ],

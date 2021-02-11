@@ -19,6 +19,7 @@ class TColors {
   static const MaterialColor red = MaterialColor(
     _redColorValue,
     <int, Color>{
+      -1: Color(0xFFCE5F5F),
       0: Color(_redColorValue),
     },
   );

@@ -1,15 +1,15 @@
-import 'package:atlok/core/models/MCustomer.dart';
+import 'package:atlok/core/models/MCustomerChange.dart';
 import 'package:atlok/core/themes/TColors.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/WButton.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/verification/widgets/w.customer_data_change_tile.dart';
 import 'package:flutter/material.dart';
-import 'WCustomerTile.dart';
 
-class WCustomerList extends StatefulWidget {
-  final List<MACustomer> customers;
+class WCustomerDataChangeList extends StatefulWidget {
+  final List<MACustomerChange> customers;
   final int nextStart;
-  WCustomerList({
+  WCustomerDataChangeList({
     Key key,
     @required this.customers,
     @required this.nextStart,
@@ -19,7 +19,7 @@ class WCustomerList extends StatefulWidget {
   _WCustomerListState createState() => _WCustomerListState();
 }
 
-class _WCustomerListState extends State<WCustomerList> {
+class _WCustomerListState extends State<WCustomerDataChangeList> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,7 +27,7 @@ class _WCustomerListState extends State<WCustomerList> {
         Column(
           children: List.generate(
             widget.customers.length,
-            (index) => WCustomerTile(
+            (index) => WCustomerDataChangeTile(
               customer: widget.customers[index],
             ),
           ),

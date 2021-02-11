@@ -24,6 +24,8 @@ import '../../features/substation_data/views/v.substation_data_form.dart';
 import '../../features/user_data/views/v.manage_user.dart';
 import '../../features/verification/views/v.customer_data_change_verification.dart';
 import '../../features/verification/views/v.user_register_verification.dart';
+import '../models/MCustomer.dart';
+import '../models/MSubstation.dart';
 
 class Routes {
   static const String vAdminDashboard = '/admin/dashboard';
@@ -110,8 +112,12 @@ class RViews extends RouterBase {
       );
     },
     VCustomerDataDetail: (data) {
+      final args = data.getArgs<VCustomerDataDetailArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VCustomerDataDetail(),
+        builder: (context) => VCustomerDataDetail(
+          key: args.key,
+          customer: args.customer,
+        ),
         settings: data,
       );
     },
@@ -146,8 +152,12 @@ class RViews extends RouterBase {
       );
     },
     VSubstationDataDetail: (data) {
+      final args = data.getArgs<VSubstationDataDetailArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VSubstationDataDetail(),
+        builder: (context) => VSubstationDataDetail(
+          key: args.key,
+          substation: args.substation,
+        ),
         settings: data,
       );
     },
@@ -176,4 +186,22 @@ class RViews extends RouterBase {
       );
     },
   };
+}
+
+/// ************************************************************************
+/// Arguments holder classes
+/// *************************************************************************
+
+/// VCustomerDataDetail arguments holder class
+class VCustomerDataDetailArguments {
+  final Key key;
+  final MACustomer customer;
+  VCustomerDataDetailArguments({this.key, @required this.customer});
+}
+
+/// VSubstationDataDetail arguments holder class
+class VSubstationDataDetailArguments {
+  final Key key;
+  final MSubstation substation;
+  VSubstationDataDetailArguments({this.key, @required this.substation});
 }

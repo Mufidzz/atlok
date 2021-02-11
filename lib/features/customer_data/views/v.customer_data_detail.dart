@@ -1,8 +1,14 @@
+import 'package:atlok/core/models/MCustomer.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class VCustomerDataDetail extends StatelessWidget {
+  final MACustomer customer;
+  const VCustomerDataDetail({Key key, @required this.customer})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -43,34 +49,39 @@ class VCustomerDataDetail extends StatelessWidget {
                       VSpacing(TSpacing * 3),
                       WDataInformationTile(
                         title: "ID Pelanggan",
-                        content: "12345678901234267890",
+                        content: "${customer.iDPEL}",
                       ),
                       WDataInformationTile(
                         title: "Nama Pelanggan",
-                        content: "12345678901234267890",
+                        content: "${customer.fullName}",
                       ),
                       WDataInformationTile(
-                        title: "Alamat Lengkap",
-                        content:
-                            "Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, ",
-                      ),
+                          title: "Alamat Lengkap",
+                          content: "${customer.address}"),
                       WDataInformationTile(
                         title: "Tarif Daya",
-                        content: "900V R1",
+                        content: "${customer.powerRating.name}",
                       ),
                       WDataInformationTile(
                         title: "Nomor Tiang",
-                        content: "ABCDE1234567890",
+                        content: "${customer.poleNumber}",
+                      ),
+                      WDataInformationTile(
+                        title: "Nomor KWH",
+                        content: "${customer.kWHNumber}",
                       ),
                       WDataInformationTile(
                         title: "Merk KWH",
-                        content: "ABCDE1234567890",
+                        content: "${customer.kWHBrand}",
                       ),
                       WDataInformationTile(
                         title: "TH TERA KWH",
-                        content: "123456789.00",
+                        content: "${customer.kWHYear}",
                       ),
-                      WDataLocation(),
+                      WDataLocation(
+                        latitude: "${customer.latitude}",
+                        longitude: "${customer.longitude}",
+                      ),
                       VSpacing(TSpacing * 3),
                       Text(
                         "Aksi",
@@ -85,7 +96,13 @@ class VCustomerDataDetail extends StatelessWidget {
                         isFilled: false,
                         textColor: TColors.primary,
                         text: "Informasi Gardu",
-                        onTap: () {},
+                        onTap: () {
+                          ExtendedNavigator.root.push(
+                            Routes.vSubstationDataDetail,
+                            arguments: VSubstationDataDetailArguments(
+                                substation: customer.substation),
+                          );
+                        },
                       ),
                       VSpacing(TSpacing * 2),
                       WButton(
@@ -100,6 +117,13 @@ class VCustomerDataDetail extends StatelessWidget {
                         backgroundColor: TColors.primary,
                         textColor: TColors.primary[-3],
                         text: "Edit Data",
+                        onTap: () {},
+                      ),
+                      VSpacing(TSpacing * 2),
+                      WButton(
+                        backgroundColor: TColors.primary,
+                        textColor: TColors.primary[-3],
+                        text: "Ajukan Perubahan",
                         onTap: () {},
                       ),
                       VSpacing(TSpacing * 4),
