@@ -16,6 +16,9 @@ class URL {
       "$_url/substation/$param/search/$start/$count";
 
   // ignore: non_constant_identifier_names
+  static CreateCustomerChange(String id) => "$_url/customer-change/$id";
+
+  // ignore: non_constant_identifier_names
   static DeleteSubstation(String id) => "$_url/substation/$id";
 
   // ignore: non_constant_identifier_names

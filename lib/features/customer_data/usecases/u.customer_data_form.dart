@@ -44,6 +44,36 @@ class UCCustomerDataForm {
     );
   }
 
+  Future<void> createUnverifiedChange() async {
+    customer.verified = false;
+    var response = await http.post(
+      URL.CreateCustomerChange(customer.iD.toString()),
+      body: json.encode(
+        customer.toJson(),
+      ),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
+    );
+
+    if (response.statusCode != 200) {
+      await UDialog(context).showSingleButtonDialog(
+        title: "Data Pelanggan",
+        content: "Pengajuan Perubahan Data Pelanggan Gagal",
+        buttonText: "OK",
+      );
+      this.error = response.body;
+      return;
+    }
+
+    await UDialog(context).showSingleButtonDialog(
+      title: "Data Pelanggan",
+      content: "Pengajuan Perubahan Data Pelanggan Berhasil",
+      buttonText: "OK",
+    );
+  }
+
   Future<void> update({@required String id}) async {
     var response = await http.put(
       URL.UpdateCustomer(id),

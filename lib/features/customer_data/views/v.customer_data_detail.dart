@@ -157,7 +157,13 @@ class VCustomerDataDetail extends StatelessWidget {
                           backgroundColor: TColors.primary,
                           textColor: TColors.primary[-3],
                           text: "Ajukan Perubahan",
-                          onTap: () {},
+                          onTap: () {
+                            ExtendedNavigator.root.push(
+                              Routes.vCustomerDataForm,
+                              arguments: VCustomerDataFormArguments(
+                                  customer: customer, userChange: true),
+                            );
+                          },
                         ),
                       ),
                       VSpacing(TSpacing * 4),

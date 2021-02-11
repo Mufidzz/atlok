@@ -130,6 +130,7 @@ class RViews extends RouterBase {
         builder: (context) => VCustomerDataForm(
           key: args.key,
           customer: args.customer,
+          userChange: args.userChange,
         ),
         settings: data,
       );
@@ -222,7 +223,9 @@ class VCustomerDataDetailArguments {
 class VCustomerDataFormArguments {
   final Key key;
   final MACustomer customer;
-  VCustomerDataFormArguments({this.key, this.customer});
+  final bool userChange;
+  VCustomerDataFormArguments(
+      {this.key, this.customer, this.userChange = false});
 }
 
 /// VPowerRatesForm arguments holder class

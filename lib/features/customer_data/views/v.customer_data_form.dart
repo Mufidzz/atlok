@@ -12,8 +12,10 @@ import 'package:flutter/material.dart';
 
 class VCustomerDataForm extends StatelessWidget {
   final MACustomer customer;
+  final bool userChange;
 
-  const VCustomerDataForm({Key key, this.customer}) : super(key: key);
+  const VCustomerDataForm({Key key, this.customer, this.userChange = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class VCustomerDataForm extends StatelessWidget {
                     0,
                   ),
                   child: CustomerForm(
+                    userChange: userChange,
                     customer: customer,
                   ),
                 ),
@@ -62,9 +65,11 @@ class VCustomerDataForm extends StatelessWidget {
 
 class CustomerForm extends StatefulWidget {
   final MACustomer customer;
+  final bool userChange;
   const CustomerForm({
     Key key,
     this.customer,
+    this.userChange,
   }) : super(key: key);
 
   @override
@@ -150,7 +155,6 @@ class _CustomerFormState extends State<CustomerForm> {
             initialValue: this._customer.poleNumber ?? "",
           ),
           VSpacing(TSpacing * 1),
-
           WButton(
             backgroundColor: TColors.primary,
             textColor: TColors.primary,
@@ -168,7 +172,6 @@ class _CustomerFormState extends State<CustomerForm> {
             isFilled: false,
           ),
           VSpacing(TSpacing * 2),
-
           WButton(
             backgroundColor: TColors.primary,
             textColor: TColors.primary,
@@ -185,16 +188,6 @@ class _CustomerFormState extends State<CustomerForm> {
             },
             isFilled: false,
           ),
-          // WDropdownWrapper(
-          //   prefixIcon: Icons.account_tree_outlined,
-          //   dropdownButton: substationDropdown(),
-          //   labelText: "Gardu",
-          // ),
-          // WDropdownWrapper(
-          //   prefixIcon: Icons.lightbulb_outline,
-          //   dropdownButton: powerRateDropdown(),
-          //   labelText: "Tarif Daya",
-          // ),
           VSpacing(TSpacing * 3),
           Text(
             "Data KWH",
@@ -273,7 +266,7 @@ class _CustomerFormState extends State<CustomerForm> {
           WButton(
             backgroundColor: TColors.primary,
             textColor: TColors.primary[-3],
-            text: "Simpan",
+            text: widget.userChange ? "Ajukan" : "Simpan",
             onTap: () async {
               if (!_formKey.currentState.validate()) {
                 return;
@@ -287,10 +280,18 @@ class _CustomerFormState extends State<CustomerForm> {
                     customer: this._customer,
                   ).create();
                 } else {
-                  await UCCustomerDataForm(
-                    context,
-                    customer: this._customer,
-                  ).update(id: widget.customer.iD.toString());
+                  if (widget.userChange) {
+                    this._customer.verified = false;
+                    await UCCustomerDataForm(
+                      context,
+                      customer: this._customer,
+                    ).createUnverifiedChange();
+                  } else {
+                    await UCCustomerDataForm(
+                      context,
+                      customer: this._customer,
+                    ).update(id: widget.customer.iD.toString());
+                  }
                 }
 
                 _formKey.currentState.reset();
