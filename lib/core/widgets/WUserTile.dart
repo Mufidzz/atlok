@@ -1,13 +1,17 @@
+import 'package:atlok/core/models/MUser.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WUserTile extends StatelessWidget {
+  final MUser user;
+
   final bool showVerificationIcon;
   const WUserTile({
     Key key,
     this.showVerificationIcon = true,
+    @required this.user,
   }) : super(key: key);
 
   @override
@@ -32,7 +36,7 @@ class WUserTile extends StatelessWidget {
             HSpacing(TSpacing * 2),
             Expanded(
               child: Text(
-                "12345678901234567890",
+                "${user.username}",
                 style: TTextStyle.normal(
                   color: TColors.primary[3],
                 ),

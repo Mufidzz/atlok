@@ -1,8 +1,30 @@
+import 'package:atlok/core/models/MUser.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/verification/usecases/u.user_register_verification.dart';
 import 'package:flutter/material.dart';
 
-class VUserRegisterVerification extends StatelessWidget {
+class VUserRegisterVerification extends StatefulWidget {
+  @override
+  _VUserRegisterVerificationState createState() =>
+      _VUserRegisterVerificationState();
+}
+
+class _VUserRegisterVerificationState extends State<VUserRegisterVerification> {
+  List<MUser> _users = new List();
+  int _nextStart = -1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UCUserRegisterVerification(context)
+        .loadUnverifiedUsers(start: 0, count: 10)
+        .then((value) {
+      _users = value.list;
+      _nextStart = value.nextStart;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -29,7 +51,10 @@ class VUserRegisterVerification extends StatelessWidget {
                     TSpacing * 6,
                     0,
                   ),
-                  child: WUserList(),
+                  child: WUserList(
+                    users: _users,
+                    nextStart: _nextStart,
+                  ),
                 ),
               ),
             ),
