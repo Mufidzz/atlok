@@ -43,4 +43,59 @@ class UCCustomerDataForm {
       buttonText: "OK",
     );
   }
+
+  Future<void> update({@required String id}) async {
+    var response = await http.put(
+      URL.UpdateCustomer(id),
+      body: json.encode(
+        customer.toJson(),
+      ),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
+    );
+
+    if (response.statusCode != 200) {
+      await UDialog(context).showSingleButtonDialog(
+        title: "Data Pelanggan",
+        content: "Update Data Pelanggan Gagal",
+        buttonText: "OK",
+      );
+      this.error = response.body;
+      return;
+    }
+
+    await UDialog(context).showSingleButtonDialog(
+      title: "Data Pelanggan",
+      content: "Update Data Pelanggan Berhasil",
+      buttonText: "OK",
+    );
+  }
+
+  Future<void> delete({@required String id}) async {
+    var response = await http.delete(
+      URL.DeleteCustomer(id),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
+    );
+
+    if (response.statusCode != 200) {
+      await UDialog(context).showSingleButtonDialog(
+        title: "Data Pelanggan",
+        content: "Hapus Data Pelanggan Gagal",
+        buttonText: "OK",
+      );
+      this.error = response.body;
+      return;
+    }
+
+    await UDialog(context).showSingleButtonDialog(
+      title: "Data Pelanggan",
+      content: "Hapus Data Pelanggan Berhasil",
+      buttonText: "OK",
+    );
+  }
 }

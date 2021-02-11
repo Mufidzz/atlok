@@ -1,7 +1,9 @@
 import 'package:atlok/core/models/MCustomer.dart';
 import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
+import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/customer_data/usecases/u.customer_data_form.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -114,14 +116,35 @@ class VCustomerDataDetail extends StatelessWidget {
                               isFilled: false,
                               textColor: TColors.red,
                               text: "Hapus Data",
-                              onTap: () {},
+                              onTap: () async {
+                                if (await UDialog(context)
+                                    .showDeleteConfirmationDialog(
+                                  title: "Hapus Pelanggan",
+                                  content:
+                                      "Penghapusan Mungkin akan Memiliki Dampak pada Item Lain. Lanjutkan ?",
+                                  leftButtonText: "Hapus",
+                                  rightButtonText: "Batal",
+                                )) {
+                                  UCCustomerDataForm(context)
+                                      .delete(id: customer.iD.toString())
+                                      .then((value) => ExtendedNavigator.root
+                                          .replace(Routes.vFindCustomerData));
+                                }
+                              },
                             ),
                             VSpacing(TSpacing * 2),
                             WButton(
                               backgroundColor: TColors.primary,
                               textColor: TColors.primary[-3],
                               text: "Edit Data",
-                              onTap: () {},
+                              onTap: () {
+                                ExtendedNavigator.root.push(
+                                  Routes.vCustomerDataForm,
+                                  arguments: VCustomerDataFormArguments(
+                                    customer: customer,
+                                  ),
+                                );
+                              },
                             ),
                             VSpacing(TSpacing * 2),
                           ],

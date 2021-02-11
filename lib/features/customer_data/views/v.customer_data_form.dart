@@ -11,6 +11,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class VCustomerDataForm extends StatelessWidget {
+  final MACustomer customer;
+
+  const VCustomerDataForm({Key key, this.customer}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -43,7 +47,9 @@ class VCustomerDataForm extends StatelessWidget {
                     TSpacing * 6,
                     0,
                   ),
-                  child: CustomerForm(),
+                  child: CustomerForm(
+                    customer: customer,
+                  ),
                 ),
               ),
             ),
@@ -55,8 +61,10 @@ class VCustomerDataForm extends StatelessWidget {
 }
 
 class CustomerForm extends StatefulWidget {
+  final MACustomer customer;
   const CustomerForm({
     Key key,
+    this.customer,
   }) : super(key: key);
 
   @override
@@ -74,10 +82,11 @@ class _CustomerFormState extends State<CustomerForm> {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
-    _customer = new MACustomer(
-      substation: new MSubstation(),
-      powerRating: new MPowerRate(),
-    );
+    _customer = widget.customer ??
+        new MACustomer(
+          substation: new MSubstation(),
+          powerRating: new MPowerRate(),
+        );
   }
 
   @override
@@ -102,6 +111,7 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.iDPEL = v;
             },
+            initialValue: this._customer.iDPEL ?? "",
           ),
           WTextField(
             icon: Icons.person_outline,
@@ -110,6 +120,7 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.fullName = v;
             },
+            initialValue: this._customer.fullName ?? "",
           ),
           WTextField(
             icon: Icons.home_outlined,
@@ -118,6 +129,7 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.address = v;
             },
+            initialValue: this._customer.address ?? "",
           ),
           VSpacing(TSpacing * 3),
           Text(
@@ -135,6 +147,7 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.poleNumber = v;
             },
+            initialValue: this._customer.poleNumber ?? "",
           ),
           VSpacing(TSpacing * 1),
 
@@ -198,6 +211,7 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.kWHNumber = v;
             },
+            initialValue: this._customer.kWHNumber ?? "",
           ),
           WTextField(
             icon: Icons.api_rounded,
@@ -206,14 +220,17 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.kWHBrand = v;
             },
+            initialValue: this._customer.kWHBrand ?? "",
           ),
           WTextField(
             icon: Icons.calendar_today,
             labelText: "Tahun TERA KWH",
             required: true,
+            keyboardType: TextInputType.number,
             onChanged: (String v) {
               this._customer.kWHYear = v;
             },
+            initialValue: this._customer.kWHYear ?? "",
           ),
           VSpacing(TSpacing * 3),
           Text(
@@ -228,17 +245,21 @@ class _CustomerFormState extends State<CustomerForm> {
             icon: Icons.adjust_rounded,
             labelText: "Latitude",
             required: true,
+            keyboardType: TextInputType.number,
             onChanged: (String v) {
               this._customer.latitude = v;
             },
+            initialValue: this._customer.latitude ?? "",
           ),
           WTextField(
             icon: Icons.adjust_rounded,
             labelText: "Longitude",
             required: true,
+            keyboardType: TextInputType.number,
             onChanged: (String v) {
               this._customer.longitude = v;
             },
+            initialValue: this._customer.longitude ?? "",
           ),
           VSpacing(TSpacing * 4),
           Text(
@@ -247,14 +268,6 @@ class _CustomerFormState extends State<CustomerForm> {
               color: TColors.primary,
               fontWeight: FontWeight.w600,
             ),
-          ),
-          VSpacing(TSpacing * 2),
-          WButton(
-            backgroundColor: TColors.red,
-            isFilled: false,
-            textColor: TColors.red,
-            text: "Hapus",
-            onTap: () {},
           ),
           VSpacing(TSpacing * 2),
           WButton(
@@ -267,12 +280,18 @@ class _CustomerFormState extends State<CustomerForm> {
               }
 
               try {
-                this._customer.verified = true;
-
-                await UCCustomerDataForm(
-                  context,
-                  customer: this._customer,
-                ).create();
+                if (widget.customer.iD == null) {
+                  this._customer.verified = true;
+                  await UCCustomerDataForm(
+                    context,
+                    customer: this._customer,
+                  ).create();
+                } else {
+                  await UCCustomerDataForm(
+                    context,
+                    customer: this._customer,
+                  ).update(id: widget.customer.iD.toString());
+                }
 
                 _formKey.currentState.reset();
               } catch (Exception) {

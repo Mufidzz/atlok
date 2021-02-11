@@ -7,8 +7,9 @@ class URL {
   static const CreatePowerRate = "$_url/power-rating/";
 
   // ignore: non_constant_identifier_names
-  static SearchCustomer(String param, int start, int count, {ext = ""}) =>
-      "$_url/customer/$param/search/$start/$count?$ext";
+  static SearchCustomer(String param, int start, int count,
+          {List<String> ext}) =>
+      "$_url/customer/$param/search/$start/$count?${ext != null ? ext.join("&") : ""}";
 
   // ignore: non_constant_identifier_names
   static SearchSubstation(String param, int start, int count) =>
@@ -22,6 +23,12 @@ class URL {
 
   // ignore: non_constant_identifier_names
   static UpdatePowerRate(String id) => "$_url/power-rating/$id";
+
+  // ignore: non_constant_identifier_names
+  static UpdateCustomer(String id) => "$_url/customer/$id";
+
+  // ignore: non_constant_identifier_names
+  static DeleteCustomer(String id) => "$_url/customer/$id";
 
   // ignore: non_constant_identifier_names
   static SearchPowerRate(String param, int start, int count) =>

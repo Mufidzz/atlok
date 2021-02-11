@@ -123,8 +123,14 @@ class RViews extends RouterBase {
       );
     },
     VCustomerDataForm: (data) {
+      final args = data.getArgs<VCustomerDataFormArguments>(
+        orElse: () => VCustomerDataFormArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VCustomerDataForm(),
+        builder: (context) => VCustomerDataForm(
+          key: args.key,
+          customer: args.customer,
+        ),
         settings: data,
       );
     },
@@ -210,6 +216,13 @@ class VCustomerDataDetailArguments {
   final Key key;
   final MACustomer customer;
   VCustomerDataDetailArguments({this.key, @required this.customer});
+}
+
+/// VCustomerDataForm arguments holder class
+class VCustomerDataFormArguments {
+  final Key key;
+  final MACustomer customer;
+  VCustomerDataFormArguments({this.key, this.customer});
 }
 
 /// VPowerRatesForm arguments holder class

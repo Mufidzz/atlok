@@ -161,10 +161,19 @@ class _WSearchBarState extends State<WSearchBar> {
           onTap: () async {
             widget.beforeFind();
 
+            List<String> ext = new List();
+            if (_sPowerRate.iD != null) {
+              ext.add("pr=${_sPowerRate.iD}");
+            }
+            if (_sSubstation.iD != null) {
+              ext.add("s=${_sSubstation.iD}");
+            }
+
             var r = await UCFindCustomerData(context).searchCustomer(
               param: "$_searchParam",
               start: 0,
               count: 10,
+              ext: ext,
             );
 
             widget.afterFind(r, _searchParam);

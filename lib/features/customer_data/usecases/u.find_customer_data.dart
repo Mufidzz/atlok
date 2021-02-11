@@ -23,6 +23,7 @@ class UCFindCustomerData {
     @required String param,
     @required int start,
     @required int count,
+    List<String> ext,
   }) async {
     String _token;
     await SharedPreferences.getInstance().then(
@@ -32,7 +33,7 @@ class UCFindCustomerData {
     );
 
     var response = await http.get(
-      URL.SearchCustomer(param, start, count),
+      URL.SearchCustomer(param, start, count, ext: ext),
       headers: {
         "TOKEN": await SharedPreferences.getInstance()
             .then((value) => value.get(SPKey.token)),
