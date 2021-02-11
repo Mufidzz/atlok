@@ -2,9 +2,13 @@ import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/substation_data/usecases/u.substation_data_form.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class VSubstationDataForm extends StatefulWidget {
+  final MSubstation substation;
+
+  const VSubstationDataForm({Key key, this.substation}) : super(key: key);
   @override
   _VSubstationDataFormState createState() => _VSubstationDataFormState();
 }
@@ -17,7 +21,7 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
-    _substation = new MSubstation();
+    _substation = widget.substation ?? new MSubstation();
   }
 
   @override
@@ -30,7 +34,9 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
             AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios_outlined),
-                onPressed: () {},
+                onPressed: () {
+                  ExtendedNavigator.root.pop();
+                },
               ),
               backgroundColor: TColors.primary,
               title: Text(
@@ -70,6 +76,7 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                           onChanged: (String v) {
                             this._substation.code = v;
                           },
+                          initialValue: _substation.code,
                         ),
                         WTextField(
                           icon: Icons.person_outline,
@@ -78,6 +85,7 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                           onChanged: (String v) {
                             this._substation.name = v;
                           },
+                          initialValue: _substation.name,
                         ),
                         VSpacing(TSpacing * 3),
                         Text(
@@ -90,19 +98,23 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                         VSpacing(TSpacing * 2),
                         WTextField(
                           icon: Icons.adjust_rounded,
+                          keyboardType: TextInputType.number,
                           labelText: "Latitude",
                           required: true,
                           onChanged: (String v) {
                             this._substation.latitude = v;
                           },
+                          initialValue: _substation.latitude,
                         ),
                         WTextField(
                           icon: Icons.adjust_rounded,
+                          keyboardType: TextInputType.number,
                           labelText: "Longitude",
                           required: true,
                           onChanged: (String v) {
                             this._substation.longitude = v;
                           },
+                          initialValue: _substation.longitude,
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
@@ -114,14 +126,6 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                         ),
                         VSpacing(TSpacing * 2),
                         WButton(
-                          backgroundColor: TColors.red,
-                          isFilled: false,
-                          textColor: TColors.red,
-                          text: "Hapus",
-                          onTap: () {},
-                        ),
-                        VSpacing(TSpacing * 2),
-                        WButton(
                           backgroundColor: TColors.primary,
                           textColor: TColors.primary[-3],
                           text: "Simpan",
@@ -130,10 +134,17 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                               return;
                             }
 
-                            await UCSubstationDataForm(
-                              context,
-                              substation: this._substation,
-                            ).create();
+                            if (_substation.iD != null) {
+                              await UCSubstationDataForm(
+                                context,
+                                substation: this._substation,
+                              ).update();
+                            } else {
+                              await UCSubstationDataForm(
+                                context,
+                                substation: this._substation,
+                              ).create();
+                            }
 
                             _formKey.currentState.reset();
                           },

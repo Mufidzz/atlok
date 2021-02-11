@@ -42,4 +42,32 @@ class UCPowerRatesForm {
       buttonText: "OK",
     );
   }
+
+  Future<void> update() async {
+    var response = await http.put(
+      URL.UpdatePowerRate(powerRate.iD.toString()),
+      body: json.encode(
+        powerRate.toJson(),
+      ),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
+    );
+
+    if (response.statusCode != 200) {
+      await UDialog(context).showSingleButtonDialog(
+        title: "Tarif Daya",
+        content: "Update Tarif Daya Gagal",
+        buttonText: "OK",
+      );
+      this.error = response.body;
+      return;
+    }
+    await UDialog(context).showSingleButtonDialog(
+      title: "Daftar",
+      content: "Update Tarif Daya Berhasil",
+      buttonText: "OK",
+    );
+  }
 }

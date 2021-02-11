@@ -105,26 +105,37 @@ class VCustomerDataDetail extends StatelessWidget {
                         },
                       ),
                       VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.red,
-                        isFilled: false,
-                        textColor: TColors.red,
-                        text: "Hapus Data",
-                        onTap: () {},
+                      WLeveledWidget(
+                        minimumLevel: 1,
+                        child: Column(
+                          children: [
+                            WButton(
+                              backgroundColor: TColors.red,
+                              isFilled: false,
+                              textColor: TColors.red,
+                              text: "Hapus Data",
+                              onTap: () {},
+                            ),
+                            VSpacing(TSpacing * 2),
+                            WButton(
+                              backgroundColor: TColors.primary,
+                              textColor: TColors.primary[-3],
+                              text: "Edit Data",
+                              onTap: () {},
+                            ),
+                            VSpacing(TSpacing * 2),
+                          ],
+                        ),
                       ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.primary,
-                        textColor: TColors.primary[-3],
-                        text: "Edit Data",
-                        onTap: () {},
-                      ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.primary,
-                        textColor: TColors.primary[-3],
-                        text: "Ajukan Perubahan",
-                        onTap: () {},
+                      WLeveledWidget(
+                        reverseOperator: true,
+                        minimumLevel: 0,
+                        child: WButton(
+                          backgroundColor: TColors.primary,
+                          textColor: TColors.primary[-3],
+                          text: "Ajukan Perubahan",
+                          onTap: () {},
+                        ),
                       ),
                       VSpacing(TSpacing * 4),
                     ],

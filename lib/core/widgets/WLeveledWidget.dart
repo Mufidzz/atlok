@@ -5,10 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class WLeveledWidget extends StatefulWidget {
   final Widget child;
   final int minimumLevel;
+  final bool reverseOperator;
   const WLeveledWidget({
     Key key,
     @required this.child,
     @required this.minimumLevel,
+    this.reverseOperator = false,
   }) : super(key: key);
 
   @override
@@ -22,12 +24,17 @@ class _WLeveledWidgetState extends State<WLeveledWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    SharedPreferences.getInstance()
-        .then((sp) => _ual = sp.getInt(SPKey.access));
+    SharedPreferences.getInstance().then((sp) {
+      setState(() {
+        _ual = sp.getInt(SPKey.access);
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _ual < widget.minimumLevel ? SizedBox() : widget.child;
+    return !widget.reverseOperator
+        ? (_ual < widget.minimumLevel ? SizedBox() : widget.child)
+        : (_ual > widget.minimumLevel ? SizedBox() : widget.child);
   }
 }

@@ -5,6 +5,7 @@ class WButton extends StatelessWidget {
   final Color backgroundColor;
   final bool isFilled;
   final Color textColor;
+  final Function onLongPress;
   final String text;
   final Function onTap;
   final double height;
@@ -21,6 +22,7 @@ class WButton extends StatelessWidget {
     this.height = TSpacing * 8,
     this.width = double.infinity,
     this.fontWeight = FontWeight.w600,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class WButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
+          onLongPress: onLongPress ?? () {},
           child: Container(
             width: width,
             height: height,

@@ -16,7 +16,14 @@ class WSubstationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ExtendedNavigator.root.push(
+          Routes.vSubstationDataDetail,
+          arguments: VSubstationDataDetailArguments(
+            substation: substation,
+          ),
+        );
+      },
       child: Container(
         padding: EdgeInsets.only(
           top: TSpacing * 2,

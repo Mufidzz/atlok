@@ -25,6 +25,7 @@ import '../../features/user_data/views/v.manage_user.dart';
 import '../../features/verification/views/v.customer_data_change_verification.dart';
 import '../../features/verification/views/v.user_register_verification.dart';
 import '../models/MCustomer.dart';
+import '../models/MPowerRate.dart';
 import '../models/MSubstation.dart';
 
 class Routes {
@@ -140,8 +141,14 @@ class RViews extends RouterBase {
       );
     },
     VPowerRatesForm: (data) {
+      final args = data.getArgs<VPowerRatesFormArguments>(
+        orElse: () => VPowerRatesFormArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VPowerRatesForm(),
+        builder: (context) => VPowerRatesForm(
+          key: args.key,
+          powerRate: args.powerRate,
+        ),
         settings: data,
       );
     },
@@ -162,8 +169,14 @@ class RViews extends RouterBase {
       );
     },
     VSubstationDataForm: (data) {
+      final args = data.getArgs<VSubstationDataFormArguments>(
+        orElse: () => VSubstationDataFormArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VSubstationDataForm(),
+        builder: (context) => VSubstationDataForm(
+          key: args.key,
+          substation: args.substation,
+        ),
         settings: data,
       );
     },
@@ -199,9 +212,23 @@ class VCustomerDataDetailArguments {
   VCustomerDataDetailArguments({this.key, @required this.customer});
 }
 
+/// VPowerRatesForm arguments holder class
+class VPowerRatesFormArguments {
+  final Key key;
+  final MPowerRate powerRate;
+  VPowerRatesFormArguments({this.key, this.powerRate});
+}
+
 /// VSubstationDataDetail arguments holder class
 class VSubstationDataDetailArguments {
   final Key key;
   final MSubstation substation;
   VSubstationDataDetailArguments({this.key, @required this.substation});
+}
+
+/// VSubstationDataForm arguments holder class
+class VSubstationDataFormArguments {
+  final Key key;
+  final MSubstation substation;
+  VSubstationDataFormArguments({this.key, this.substation});
 }

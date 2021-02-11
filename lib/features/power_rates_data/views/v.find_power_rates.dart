@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:atlok/core/models/MPowerRate.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/power_rates_data/widgets/w.power_rate_tile.dart';
 import 'package:atlok/features/power_rates_data/widgets/w.search_bar.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -84,7 +87,9 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
                 TSpacing * 4,
               ),
               child: WButton(
-                onTap: () {},
+                onTap: () {
+                  ExtendedNavigator.root.push(Routes.vPowerRatesForm);
+                },
                 text: "Tambah Data",
                 textColor: TColors.primary[-3],
                 backgroundColor: TColors.primary,

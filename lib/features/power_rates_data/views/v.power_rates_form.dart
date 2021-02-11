@@ -2,9 +2,14 @@ import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/power_rates_data/usecases/u.power_rates_form.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class VPowerRatesForm extends StatefulWidget {
+  final MPowerRate powerRate;
+
+  const VPowerRatesForm({Key key, this.powerRate}) : super(key: key);
+
   @override
   _VPowerRatesFormState createState() => _VPowerRatesFormState();
 }
@@ -17,7 +22,7 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
-    _powerRate = new MPowerRate();
+    _powerRate = widget.powerRate ?? new MPowerRate();
   }
 
   @override
@@ -30,7 +35,9 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
             AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back_ios_outlined),
-                onPressed: () {},
+                onPressed: () {
+                  ExtendedNavigator.root.pop();
+                },
               ),
               backgroundColor: TColors.primary,
               title: Text(
@@ -70,6 +77,7 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                           onChanged: (String v) {
                             this._powerRate.code = v;
                           },
+                          initialValue: _powerRate.code,
                         ),
                         WTextField(
                           icon: Icons.title,
@@ -78,6 +86,7 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                           onChanged: (String v) {
                             this._powerRate.name = v;
                           },
+                          initialValue: _powerRate.name,
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
@@ -104,10 +113,18 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                             if (!_formKey.currentState.validate()) {
                               return;
                             }
-                            await UCPowerRatesForm(
-                              context,
-                              powerRate: this._powerRate,
-                            ).create();
+
+                            if (_powerRate.iD != null) {
+                              await UCPowerRatesForm(
+                                context,
+                                powerRate: this._powerRate,
+                              ).update();
+                            } else {
+                              await UCPowerRatesForm(
+                                context,
+                                powerRate: this._powerRate,
+                              ).create();
+                            }
 
                             _formKey.currentState.reset();
                           },

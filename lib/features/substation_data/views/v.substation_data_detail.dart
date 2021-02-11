@@ -1,6 +1,9 @@
 import 'package:atlok/core/models/MSubstation.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
+import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/substation_data/usecases/u.substation_data_form.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -73,20 +76,51 @@ class VSubstationDataDetail extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.red,
-                        isFilled: false,
-                        textColor: TColors.red,
-                        text: "Hapus Data",
-                        onTap: () {},
-                      ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.primary,
-                        textColor: TColors.primary[-3],
-                        text: "Edit Data",
-                        onTap: () {},
+                      WLeveledWidget(
+                        minimumLevel: 1,
+                        child: Column(
+                          children: [
+                            VSpacing(TSpacing * 2),
+                            WButton(
+                              backgroundColor: TColors.red,
+                              isFilled: false,
+                              textColor: TColors.red,
+                              text: "Hapus Data",
+                              onTap: () {
+                                UDialog(context)
+                                    .showDeleteConfirmationDialog(
+                                        title: "Konfirmasi Hapus",
+                                        content:
+                                            "Yakin akan Menghapus Item ini, Penghapusan Mungkin Memiliki Efek Pada Beberapa Item Lain",
+                                        rightButtonText: "Batal",
+                                        leftButtonText: "Hapus")
+                                    .then(
+                                  (confirmed) {
+                                    if (confirmed) {
+                                      UCSubstationDataForm(context)
+                                          .deleteSubstation(
+                                        id: substation.iD.toString(),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
+                            ),
+                            VSpacing(TSpacing * 2),
+                            WButton(
+                              backgroundColor: TColors.primary,
+                              textColor: TColors.primary[-3],
+                              text: "Edit Data",
+                              onTap: () {
+                                ExtendedNavigator.root.push(
+                                  Routes.vSubstationDataForm,
+                                  arguments: VSubstationDataFormArguments(
+                                      substation: substation),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       VSpacing(TSpacing * 4),
                     ],

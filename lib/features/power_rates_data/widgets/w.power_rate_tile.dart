@@ -5,6 +5,7 @@ import 'package:atlok/core/routes/routes.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class WPowerRateTile extends StatelessWidget {
@@ -17,7 +18,18 @@ class WPowerRateTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Flushbar(
+          message: "Tekan Lama Untuk Mengedit",
+          duration: Duration(seconds: 1),
+        )..show(context);
+      },
+      onLongPress: () {
+        ExtendedNavigator.root.push(
+          Routes.vPowerRatesForm,
+          arguments: VPowerRatesFormArguments(powerRate: this.powerRate),
+        );
+      },
       child: Container(
         padding: EdgeInsets.only(
           top: TSpacing * 2,

@@ -15,6 +15,15 @@ class URL {
       "$_url/substation/$param/search/$start/$count";
 
   // ignore: non_constant_identifier_names
+  static DeleteSubstation(String id) => "$_url/substation/$id";
+
+  // ignore: non_constant_identifier_names
+  static UpdateSubstation(String id) => "$_url/substation/$id";
+
+  // ignore: non_constant_identifier_names
+  static UpdatePowerRate(String id) => "$_url/power-rating/$id";
+
+  // ignore: non_constant_identifier_names
   static SearchPowerRate(String param, int start, int count) =>
       "$_url/power-rating/$param/search/$start/$count";
 

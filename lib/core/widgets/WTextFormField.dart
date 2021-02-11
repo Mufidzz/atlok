@@ -51,6 +51,7 @@ class WTextField extends StatelessWidget {
   final String escapeRegex;
   final TextInputType keyboardType;
   final onChanged;
+  final initialValue;
 
   const WTextField({
     Key key,
@@ -69,6 +70,7 @@ class WTextField extends StatelessWidget {
     this.onChanged,
     this.maxLines = 1,
     this.backgroundColor = Colors.white,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -133,6 +135,7 @@ class WTextField extends StatelessWidget {
           contentPadding: const EdgeInsets.all(0),
           hintText: hintText,
         ),
+        initialValue: initialValue,
         onChanged: onChanged,
         validator: (String value) {
           String r = "";
