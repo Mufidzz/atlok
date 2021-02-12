@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:atlok/core/models/MFare.dart';
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/WButton.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/fare_data/usecases/u.find_power_rates.dart';
 import 'package:atlok/features/power_rates_data/usecases/u.find_power_rates.dart';
 import 'package:atlok/features/substation_data/usecases/u.find_substation_data.dart';
 import 'package:atlok/features/substation_data/views/v.find_substation_data.dart';
@@ -162,6 +164,33 @@ class UDialog {
     );
   }
 
+  Future<MFare> showFareSelectDialog() async {
+    return await showDialog<MFare>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) => Scaffold(
+        backgroundColor: Colors.transparent,
+        body: InkWell(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            alignment: Alignment.center,
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                width: MediaQuery.of(context).size.width * .8,
+                height: MediaQuery.of(context).size.height * .8,
+                color: Colors.white,
+                child: LWFindFares(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<MSubstation> showSubstationSelectDialog() async {
     return await showDialog<MSubstation>(
       context: context,
@@ -213,7 +242,7 @@ class _LWFindPowerRateState extends State<LWFindPowerRate> {
           height: 50,
           color: TColors.primary,
           child: Text(
-            "Pilih Tarif Daya",
+            "Pilih Daya",
             style: TTextStyle.medium(
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -231,7 +260,7 @@ class _LWFindPowerRateState extends State<LWFindPowerRate> {
                 child: WTextField(
                   icon: Icons.search,
                   labelText: "Kata Kunci",
-                  hintText: "Nama / Kode Tarif Daya",
+                  hintText: "Nama / Kode Daya",
                   onChanged: (String v) {
                     _searchParam = v;
                   },
@@ -374,6 +403,95 @@ class _LWFindSubstationState extends State<LWFindSubstation> {
   }
 }
 
+class LWFindFares extends StatefulWidget {
+  const LWFindFares({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _LWFindFareState createState() => _LWFindFareState();
+}
+
+class _LWFindFareState extends State<LWFindFares> {
+  List<MFare> _fare = new List();
+  String _searchParam = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          alignment: Alignment.center,
+          height: 50,
+          color: TColors.primary,
+          child: Text(
+            "Pilih Tarif",
+            style: TTextStyle.medium(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            left: TSpacing,
+            right: TSpacing,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: WTextField(
+                  icon: Icons.search,
+                  labelText: "Kata Kunci",
+                  hintText: "Nama / Kode Tarif",
+                  onChanged: (String v) {
+                    _searchParam = v;
+                  },
+                ),
+              ),
+              HSpacing(TSpacing),
+              WButton(
+                backgroundColor: TColors.primary,
+                textColor: TColors.primary,
+                text: "Cari",
+                isFilled: false,
+                width: TSpacing * 15,
+                height: TSpacing * 10,
+                onTap: () {
+                  UCFindFares(context)
+                      .searchFares(param: "$_searchParam", start: 0, count: 10)
+                      .then(
+                    (v) {
+                      var dJS = json.decode(v.body);
+                      setState(() {
+                        _fare = dJS["Data"]
+                            .map<MFare>((json) => MFare.fromJson(json))
+                            .toList();
+                      });
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: WFareList(
+              fares: _fare,
+              onTileTap: (MFare fare) {
+                Navigator.of(context).pop(fare);
+              },
+            ),
+          ),
+        ),
+        VSpacing(TSpacing * 2),
+      ],
+    );
+  }
+}
+
 class WPowerRateList extends StatelessWidget {
   final List<MPowerRate> powerRates;
   final Function onTileTap;
@@ -417,6 +535,31 @@ class WSubstationList extends StatelessWidget {
           substation: substations[index],
           onTap: (MSubstation substation) {
             onTileTap(substation);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class WFareList extends StatelessWidget {
+  final Function onTileTap;
+  final List<MFare> fares;
+  const WFareList({
+    Key key,
+    @required this.fares,
+    @required this.onTileTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        fares.length,
+        (index) => WFareTile(
+          fare: fares[index],
+          onTap: (MFare fare) {
+            onTileTap(fare);
           },
         ),
       ),
@@ -540,6 +683,72 @@ class WSubstationTile extends StatelessWidget {
                       ),
                       Text(
                         "${substation.name}",
+                        style: TTextStyle.small(
+                          color: TColors.primary[3],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WFareTile extends StatelessWidget {
+  final Function onTap;
+  final MFare fare;
+  const WFareTile({
+    Key key,
+    @required this.fare,
+    @required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        onTap(fare);
+      },
+      child: Container(
+        padding: EdgeInsets.only(
+          top: TSpacing * 2,
+          bottom: TSpacing * 2,
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  height: 35,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1 / 1,
+                    child: Icon(
+                      Icons.account_tree,
+                      color: TColors.primary[-2],
+                    ),
+                  ),
+                ),
+                HSpacing(TSpacing * 2),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${fare.code}",
+                        style: TTextStyle.normal(
+                          color: TColors.primary[3],
+                        ),
+                      ),
+                      Text(
+                        "${fare.name}",
                         style: TTextStyle.small(
                           color: TColors.primary[3],
                         ),

@@ -15,6 +15,10 @@ class UCAdminDashboard {
     ExtendedNavigator.root.push(Routes.vFindPowerRates);
   }
 
+  static void goToFindFare() {
+    ExtendedNavigator.root.push(Routes.vFindFares);
+  }
+
   static void goToCustomerChangeVerification() {
     ExtendedNavigator.root.push(Routes.vCustomerDataChangeVerification);
   }

@@ -5,6 +5,8 @@ import 'package:atlok/features/customer_data/views/v.customer_data_change_reques
 import 'package:atlok/features/customer_data/views/v.customer_data_detail.dart';
 import 'package:atlok/features/customer_data/views/v.customer_data_form.dart';
 import 'package:atlok/features/customer_data/views/v.find_customer_data.dart';
+import 'package:atlok/features/fare_data/views/v.fares_form.dart';
+import 'package:atlok/features/fare_data/views/v.find_fares.dart';
 import 'package:atlok/features/power_rates_data/views/v.find_power_rates.dart';
 import 'package:atlok/features/power_rates_data/views/v.power_rates_form.dart';
 import 'package:atlok/features/substation_data/views/v.find_substation_data.dart';
@@ -24,7 +26,9 @@ import 'package:auto_route/auto_route_annotations.dart';
   MaterialRoute(page: VCustomerDataForm, path: "/cdf"),
   MaterialRoute(page: VFindCustomerData, path: "/fcd", initial: true),
   MaterialRoute(page: VFindPowerRates, path: "/fpr"),
+  MaterialRoute(page: VFindFares, path: "/ffrs"),
   MaterialRoute(page: VPowerRatesForm, path: "/prf"),
+  MaterialRoute(page: VFaresForm, path: "/ffrms"),
   MaterialRoute(page: VFindSubstationData, path: "/fsd"),
   MaterialRoute(page: VSubstationDataDetail, path: "/sdd"),
   MaterialRoute(page: VSubstationDataForm, path: "/sdf"),

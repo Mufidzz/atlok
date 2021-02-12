@@ -16,6 +16,8 @@ import '../../features/customer_data/views/v.customer_data_change_request.dart';
 import '../../features/customer_data/views/v.customer_data_detail.dart';
 import '../../features/customer_data/views/v.customer_data_form.dart';
 import '../../features/customer_data/views/v.find_customer_data.dart';
+import '../../features/fare_data/views/v.fares_form.dart';
+import '../../features/fare_data/views/v.find_fares.dart';
 import '../../features/power_rates_data/views/v.find_power_rates.dart';
 import '../../features/power_rates_data/views/v.power_rates_form.dart';
 import '../../features/substation_data/views/v.find_substation_data.dart';
@@ -26,6 +28,7 @@ import '../../features/verification/views/v.customer_data_change_verification.da
 import '../../features/verification/views/v.user_register_verification.dart';
 import '../models/MCustomer.dart';
 import '../models/MCustomerChange.dart';
+import '../models/MFare.dart';
 import '../models/MPowerRate.dart';
 import '../models/MSubstation.dart';
 
@@ -38,7 +41,9 @@ class Routes {
   static const String vCustomerDataForm = '/cdf';
   static const String vFindCustomerData = '/fcd';
   static const String vFindPowerRates = '/fpr';
+  static const String vFindFares = '/ffrs';
   static const String vPowerRatesForm = '/prf';
+  static const String vFaresForm = '/ffrms';
   static const String vFindSubstationData = '/fsd';
   static const String vSubstationDataDetail = '/sdd';
   static const String vSubstationDataForm = '/sdf';
@@ -54,7 +59,9 @@ class Routes {
     vCustomerDataForm,
     vFindCustomerData,
     vFindPowerRates,
+    vFindFares,
     vPowerRatesForm,
+    vFaresForm,
     vFindSubstationData,
     vSubstationDataDetail,
     vSubstationDataForm,
@@ -77,7 +84,9 @@ class RViews extends RouterBase {
     RouteDef(Routes.vCustomerDataForm, page: VCustomerDataForm),
     RouteDef(Routes.vFindCustomerData, page: VFindCustomerData),
     RouteDef(Routes.vFindPowerRates, page: VFindPowerRates),
+    RouteDef(Routes.vFindFares, page: VFindFares),
     RouteDef(Routes.vPowerRatesForm, page: VPowerRatesForm),
+    RouteDef(Routes.vFaresForm, page: VFaresForm),
     RouteDef(Routes.vFindSubstationData, page: VFindSubstationData),
     RouteDef(Routes.vSubstationDataDetail, page: VSubstationDataDetail),
     RouteDef(Routes.vSubstationDataForm, page: VSubstationDataForm),
@@ -153,6 +162,12 @@ class RViews extends RouterBase {
         settings: data,
       );
     },
+    VFindFares: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => VFindFares(),
+        settings: data,
+      );
+    },
     VPowerRatesForm: (data) {
       final args = data.getArgs<VPowerRatesFormArguments>(
         orElse: () => VPowerRatesFormArguments(),
@@ -161,6 +176,18 @@ class RViews extends RouterBase {
         builder: (context) => VPowerRatesForm(
           key: args.key,
           powerRate: args.powerRate,
+        ),
+        settings: data,
+      );
+    },
+    VFaresForm: (data) {
+      final args = data.getArgs<VFaresFormArguments>(
+        orElse: () => VFaresFormArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => VFaresForm(
+          key: args.key,
+          fare: args.fare,
         ),
         settings: data,
       );
@@ -247,6 +274,13 @@ class VPowerRatesFormArguments {
   final Key key;
   final MPowerRate powerRate;
   VPowerRatesFormArguments({this.key, this.powerRate});
+}
+
+/// VFaresForm arguments holder class
+class VFaresFormArguments {
+  final Key key;
+  final MFare fare;
+  VFaresFormArguments({this.key, this.fare});
 }
 
 /// VSubstationDataDetail arguments holder class

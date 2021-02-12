@@ -1,5 +1,6 @@
 import 'package:atlok/core/models/MCustomer.dart';
 import 'package:atlok/core/models/MDropdown.dart';
+import 'package:atlok/core/models/MFare.dart';
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/models/MSubstation.dart';
 import 'package:atlok/core/routes/router.gr.dart';
@@ -96,6 +97,7 @@ class _CustomerFormState extends State<CustomerForm> {
         new MACustomer(
           substation: new MSubstation(),
           powerRating: new MPowerRate(),
+          fare: new MFare(),
         );
     _latitudeController.text = this._customer.latitude ?? "";
     _longitudeController.text = this._customer.longitude ?? "";
@@ -182,7 +184,24 @@ class _CustomerFormState extends State<CustomerForm> {
           WButton(
             backgroundColor: TColors.primary,
             textColor: TColors.primary,
-            text: _customer.powerRating.name ?? "Pilih Tarif Daya",
+            text: _customer.fare.name ?? "Pilih Tarif",
+            onTap: () {
+              UDialog(context).showFareSelectDialog().then((v) {
+                if (v != null) {
+                  setState(() {
+                    this._customer.fare = v;
+                    this._customer.fareID = v.iD;
+                  });
+                }
+              });
+            },
+            isFilled: false,
+          ),
+          VSpacing(TSpacing * 2),
+          WButton(
+            backgroundColor: TColors.primary,
+            textColor: TColors.primary,
+            text: _customer.powerRating.name ?? "Pilih Daya",
             onTap: () {
               UDialog(context).showPowerRateSelectDialog().then((v) {
                 if (v != null) {
@@ -301,8 +320,11 @@ class _CustomerFormState extends State<CustomerForm> {
                 return;
               }
 
+              _customer.longitude = _longitudeController.text;
+              _customer.latitude = _latitudeController.text;
+
               try {
-                if (widget.customer.iD == null) {
+                if (widget.customer == null) {
                   this._customer.verified = true;
                   await UCCustomerDataForm(
                     context,
@@ -330,6 +352,8 @@ class _CustomerFormState extends State<CustomerForm> {
 
                 _formKey.currentState.reset();
               } catch (Exception) {
+                print(_customer.toJson());
+                print(Exception);
                 UDialog(context).showSingleButtonDialog(
                   title: "Data Pelanggan",
                   content: "Pembuatan Data Pelanggan Gagal",

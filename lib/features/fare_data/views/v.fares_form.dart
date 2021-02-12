@@ -1,29 +1,31 @@
+import 'package:atlok/core/models/MFare.dart';
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/fare_data/usecases/u.fares_form.dart';
 import 'package:atlok/features/power_rates_data/usecases/u.power_rates_form.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class VPowerRatesForm extends StatefulWidget {
-  final MPowerRate powerRate;
+class VFaresForm extends StatefulWidget {
+  final MFare fare;
 
-  const VPowerRatesForm({Key key, this.powerRate}) : super(key: key);
+  const VFaresForm({Key key, this.fare}) : super(key: key);
 
   @override
-  _VPowerRatesFormState createState() => _VPowerRatesFormState();
+  _VFaresFormState createState() => _VFaresFormState();
 }
 
-class _VPowerRatesFormState extends State<VPowerRatesForm> {
+class _VFaresFormState extends State<VFaresForm> {
   GlobalKey<FormState> _formKey;
-  MPowerRate _powerRate;
+  MFare _fare;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
-    _powerRate = widget.powerRate ?? new MPowerRate();
+    _fare = widget.fare ?? new MFare();
   }
 
   @override
@@ -64,7 +66,7 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Data Daya",
+                          "Data Tarif",
                           style: TTextStyle.medium(
                             color: TColors.primary,
                             fontWeight: FontWeight.w600,
@@ -73,21 +75,21 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                         VSpacing(TSpacing * 2),
                         WTextField(
                           icon: Icons.workspaces_outline,
-                          labelText: "Kode Daya",
+                          labelText: "Kode Tarif",
                           required: true,
                           onChanged: (String v) {
-                            this._powerRate.code = v;
+                            this._fare.code = v;
                           },
-                          initialValue: _powerRate.code,
+                          initialValue: _fare.code,
                         ),
                         WTextField(
                           icon: Icons.title,
-                          labelText: "Nama Daya",
+                          labelText: "Nama Tarif",
                           required: true,
                           onChanged: (String v) {
-                            this._powerRate.name = v;
+                            this._fare.name = v;
                           },
-                          initialValue: _powerRate.name,
+                          initialValue: _fare.name,
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
@@ -115,20 +117,19 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                               return;
                             }
 
-                            if (_powerRate.iD != null) {
-                              await UCPowerRatesForm(
+                            if (_fare.iD != null) {
+                              await UCFaresForm(
                                 context,
-                                powerRate: this._powerRate,
+                                fare: this._fare,
                               ).update();
 
                               ExtendedNavigator.root.pushAndRemoveUntil(
-                                  Routes.vFindPowerRates, (route) => false);
+                                  Routes.vFindFares, (route) => false);
                             } else {
-                              await UCPowerRatesForm(
+                              await UCFaresForm(
                                 context,
-                                powerRate: this._powerRate,
+                                fare: this._fare,
                               ).create();
-
                               ExtendedNavigator.root.pop();
                             }
 

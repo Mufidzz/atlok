@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:atlok/core/models/MFare.dart';
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/fare_data/widgets/w.fares_tile.dart';
 import 'package:atlok/features/power_rates_data/widgets/w.power_rate_tile.dart';
 import 'package:atlok/features/power_rates_data/widgets/w.search_bar.dart';
 import 'package:auto_route/auto_route.dart';
@@ -11,13 +13,13 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class VFindPowerRates extends StatefulWidget {
+class VFindFares extends StatefulWidget {
   @override
-  _VFindPowerRatesState createState() => _VFindPowerRatesState();
+  _VFindFaresState createState() => _VFindFaresState();
 }
 
-class _VFindPowerRatesState extends State<VFindPowerRates> {
-  List<MPowerRate> _powerRates = new List();
+class _VFindFaresState extends State<VFindFares> {
+  List<MFare> _fares = new List();
   int _nextStart = -1;
 
   @override
@@ -29,8 +31,14 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
           children: [
             AppBar(
               backgroundColor: TColors.primary,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_outlined),
+                onPressed: () {
+                  ExtendedNavigator.root.pop();
+                },
+              ),
               title: Text(
-                "Data Daya",
+                "Data Tarif",
                 style: TTextStyle.medium(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -53,9 +61,9 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
 
                         setState(() {
                           _nextStart = dJSON["NextStart"];
-                          _powerRates = dJSON["Data"]
-                              .map<MPowerRate>(
-                                (json) => MPowerRate.fromJson(json),
+                          _fares = dJSON["Data"]
+                              .map<MFare>(
+                                (json) => MFare.fromJson(json),
                               )
                               .toList();
                         });
@@ -70,8 +78,8 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
                     VSpacing(TSpacing * 2),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: WPowerRateList(
-                          powerRates: _powerRates,
+                        child: WFaresList(
+                          fares: _fares,
                         ),
                       ),
                     )
@@ -88,7 +96,7 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
               ),
               child: WButton(
                 onTap: () {
-                  ExtendedNavigator.root.push(Routes.vPowerRatesForm);
+                  ExtendedNavigator.root.push(Routes.vFaresForm);
                 },
                 text: "Tambah Data",
                 textColor: TColors.primary[-3],
@@ -102,20 +110,20 @@ class _VFindPowerRatesState extends State<VFindPowerRates> {
   }
 }
 
-class WPowerRateList extends StatelessWidget {
-  final List<MPowerRate> powerRates;
-  const WPowerRateList({
+class WFaresList extends StatelessWidget {
+  final List<MFare> fares;
+  const WFaresList({
     Key key,
-    @required this.powerRates,
+    @required this.fares,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: List.generate(
-        powerRates.length,
-        (index) => WPowerRateTile(
-          powerRate: powerRates[index],
+        fares.length,
+        (index) => WFaresTile(
+          fare: fares[index],
         ),
       ),
     );

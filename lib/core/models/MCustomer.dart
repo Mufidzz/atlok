@@ -1,6 +1,8 @@
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/models/MSubstation.dart';
 
+import 'MFare.dart';
+
 class MCustomer {
   int iD;
   String iDPEL;
@@ -9,6 +11,7 @@ class MCustomer {
   String poleNumber;
   int substationID;
   int powerRatingID;
+  int fareID;
   String kWHNumber;
   String kWHBrand;
   String kWHYear;
@@ -24,6 +27,7 @@ class MCustomer {
       this.poleNumber,
       this.substationID,
       this.powerRatingID,
+      this.fareID,
       this.kWHNumber,
       this.kWHBrand,
       this.kWHYear,
@@ -39,6 +43,7 @@ class MCustomer {
     poleNumber = json['PoleNumber'];
     substationID = json['SubstationID'];
     powerRatingID = json['PowerRatingID'];
+    fareID = json['FareID'];
     kWHNumber = json['KWHNumber'];
     kWHBrand = json['KWHBrand'];
     kWHYear = json['KWHYear'];
@@ -56,6 +61,7 @@ class MCustomer {
     data['PoleNumber'] = this.poleNumber;
     data['SubstationID'] = this.substationID;
     data['PowerRatingID'] = this.powerRatingID;
+    data['FareID'] = this.fareID;
     data['KWHNumber'] = this.kWHNumber;
     data['KWHBrand'] = this.kWHBrand;
     data['KWHYear'] = this.kWHYear;
@@ -69,6 +75,7 @@ class MCustomer {
 class MACustomer extends MCustomer {
   MSubstation substation;
   MPowerRate powerRating;
+  MFare fare;
 
   MACustomer(
       {iD,
@@ -78,6 +85,7 @@ class MACustomer extends MCustomer {
       poleNumber,
       substationID,
       powerRatingID,
+      fareID,
       kWHNumber,
       kWHBrand,
       kWHYear,
@@ -85,7 +93,8 @@ class MACustomer extends MCustomer {
       longitude,
       verified,
       this.substation,
-      this.powerRating})
+      this.powerRating,
+      this.fare})
       : super(
           iD: iD,
           iDPEL: iDPEL,
@@ -100,6 +109,7 @@ class MACustomer extends MCustomer {
           latitude: latitude,
           longitude: longitude,
           verified: verified,
+          fareID: fareID,
         );
 
   MACustomer.fromJson(Map<String, dynamic> json) {
@@ -110,6 +120,7 @@ class MACustomer extends MCustomer {
     poleNumber = json['PoleNumber'];
     substationID = json['SubstationID'];
     powerRatingID = json['PowerRatingID'];
+    fareID = json['FareID'];
     kWHNumber = json['KWHNumber'];
     kWHBrand = json['KWHBrand'];
     kWHYear = json['KWHYear'];
@@ -122,6 +133,7 @@ class MACustomer extends MCustomer {
     powerRating = json['PowerRating'] != null
         ? new MPowerRate.fromJson(json['PowerRating'])
         : null;
+    fare = json['Fare'] != null ? new MFare.fromJson(json['Fare']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -133,6 +145,7 @@ class MACustomer extends MCustomer {
     data['PoleNumber'] = this.poleNumber;
     data['SubstationID'] = this.substationID;
     data['PowerRatingID'] = this.powerRatingID;
+    data['FareID'] = this.fareID;
     data['KWHNumber'] = this.kWHNumber;
     data['KWHBrand'] = this.kWHBrand;
     data['KWHYear'] = this.kWHYear;
@@ -144,6 +157,9 @@ class MACustomer extends MCustomer {
     }
     if (this.powerRating != null) {
       data['PowerRating'] = this.powerRating.toJson();
+    }
+    if (this.fare != null) {
+      data['Fare'] = this.fare.toJson();
     }
     return data;
   }

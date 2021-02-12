@@ -1,5 +1,6 @@
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/fare_data/usecases/u.find_power_rates.dart';
 import 'package:atlok/features/power_rates_data/usecases/u.find_power_rates.dart';
 import 'package:atlok/features/substation_data/usecases/u.find_substation_data.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _WSearchBarState extends State<WSearchBar> {
           textColor: TColors.primary[-3],
           onTap: () async {
             widget.beforeFind();
-            var r = await UCFindPowerRates(context).searchPowerRates(
+            var r = await UCFindFares(context).searchFares(
               param: "$_param",
               start: 0,
               count: 10,

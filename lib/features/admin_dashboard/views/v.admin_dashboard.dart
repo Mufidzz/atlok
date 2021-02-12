@@ -65,7 +65,16 @@ class VAdminDashboard extends StatelessWidget {
                       WButton(
                         backgroundColor: TColors.primary,
                         textColor: TColors.primary[-3],
-                        text: "Tarif Daya",
+                        text: "Tarif",
+                        onTap: () {
+                          UCAdminDashboard.goToFindFare();
+                        },
+                      ),
+                      VSpacing(TSpacing * 2),
+                      WButton(
+                        backgroundColor: TColors.primary,
+                        textColor: TColors.primary[-3],
+                        text: "Daya",
                         onTap: () {
                           UCAdminDashboard.goToFindPowerRates();
                         },
