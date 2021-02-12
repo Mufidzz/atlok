@@ -1,8 +1,55 @@
+import 'package:atlok/core/models/MCustomer.dart';
+import 'package:atlok/core/models/MCustomerChange.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
+import 'package:atlok/features/customer_data/usecases/u.customer_data_form.dart';
+import 'package:atlok/features/verification/usecases/u.customer_data_change_verification.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class VCustomerDataChangeRequest extends StatelessWidget {
+class VCustomerDataChangeRequest extends StatefulWidget {
+  final MCustomerChange customerChange;
+
+  const VCustomerDataChangeRequest({Key key, @required this.customerChange})
+      : super(key: key);
+
+  @override
+  _VCustomerDataChangeRequestState createState() =>
+      _VCustomerDataChangeRequestState();
+}
+
+class _VCustomerDataChangeRequestState
+    extends State<VCustomerDataChangeRequest> {
+  MACustomer oldData;
+  MACustomer newData;
+  MACustomer _selectedData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UCCustomerDataChangeVerification(context)
+        .loadCustomer(id: widget.customerChange.currentCustomerID.toString())
+        .then((value) {
+      setState(() {
+        this.oldData = value;
+      });
+    }).then((value) {
+      UCCustomerDataChangeVerification(context)
+          .loadCustomer(id: widget.customerChange.newCustomerID.toString())
+          .then((value) {
+        setState(() {
+          this.newData = value;
+        });
+      });
+    }).then((value) {
+      setState(() {
+        _selectedData = oldData;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WSafeArea(
@@ -30,104 +77,150 @@ class VCustomerDataChangeRequest extends StatelessWidget {
                     TSpacing * 6,
                     0,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: WButton(
-                              onTap: () {},
-                              text: "Data Lama",
-                              textColor: TColors.primary[-3],
-                              backgroundColor: TColors.primary,
+                  child: _selectedData == null
+                      ? CircularProgressIndicator()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: WButton(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedData = oldData;
+                                      });
+                                    },
+                                    text: "Data Lama",
+                                    isFilled: _selectedData == oldData,
+                                    textColor: _selectedData == oldData
+                                        ? TColors.primary[-3]
+                                        : TColors.primary,
+                                    backgroundColor: TColors.primary,
+                                  ),
+                                ),
+                                HSpacing(TSpacing * 3),
+                                Expanded(
+                                  child: WButton(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedData = newData;
+                                      });
+                                    },
+                                    text: "Data Baru",
+                                    backgroundColor: TColors.primary,
+                                    isFilled: _selectedData == newData,
+                                    textColor: _selectedData == newData
+                                        ? TColors.primary[-3]
+                                        : TColors.primary,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          HSpacing(TSpacing * 3),
-                          Expanded(
-                            child: WButton(
-                              onTap: () {},
-                              text: "Data Baru",
-                              textColor: TColors.primary,
+                            VSpacing(TSpacing * 6),
+                            Text(
+                              "Informasi Pelanggan ${_selectedData == oldData ? "Lama" : "Baru"}",
+                              style: TTextStyle.medium(
+                                color: TColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            VSpacing(TSpacing * 3),
+                            WDataInformationTile(
+                              title: "ID Pelanggan",
+                              content: "${_selectedData.iDPEL}",
+                            ),
+                            WDataInformationTile(
+                              title: "Nama Pelanggan",
+                              content: "${_selectedData.fullName}",
+                            ),
+                            WDataInformationTile(
+                              title: "Alamat Lengkap",
+                              content: "${_selectedData.address}",
+                            ),
+                            WDataInformationTile(
+                              title: "Tarif Daya",
+                              content:
+                                  "${_selectedData.powerRating.code} / ${_selectedData.powerRating.name}",
+                            ),
+                            WDataInformationTile(
+                              title: "Nomor Tiang",
+                              content: "${_selectedData.poleNumber}",
+                            ),
+                            WDataInformationTile(
+                              title: "Nomor KWH",
+                              content: "${_selectedData.kWHNumber}",
+                            ),
+                            WDataInformationTile(
+                              title: "Merk KWH",
+                              content: "${_selectedData.kWHBrand}",
+                            ),
+                            WDataInformationTile(
+                              title: "TH TERA KWH",
+                              content: "${_selectedData.kWHYear}",
+                            ),
+                            WDataLocation(
+                              latitude: _selectedData.latitude,
+                              longitude: _selectedData.longitude,
+                            ),
+                            VSpacing(TSpacing * 2),
+                            WButton(
                               backgroundColor: TColors.primary,
                               isFilled: false,
+                              textColor: TColors.primary,
+                              text: "Informasi Gardu",
+                              onTap: () {
+                                ExtendedNavigator.root.push(
+                                    Routes.vSubstationDataDetail,
+                                    arguments: VSubstationDataDetailArguments(
+                                        substation: _selectedData.substation));
+                              },
                             ),
-                          ),
-                        ],
-                      ),
-                      VSpacing(TSpacing * 6),
-                      Text(
-                        "Informasi Pelanggan Lama",
-                        style: TTextStyle.medium(
-                          color: TColors.primary,
-                          fontWeight: FontWeight.w600,
+                            VSpacing(TSpacing * 3),
+                            Text(
+                              "Aksi",
+                              style: TTextStyle.medium(
+                                color: TColors.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            VSpacing(TSpacing * 2),
+                            WButton(
+                              backgroundColor: TColors.red,
+                              isFilled: false,
+                              textColor: TColors.red,
+                              text: "Tolak",
+                              onTap: () async {
+                                await UCCustomerDataChangeVerification(context)
+                                    .denyChange(
+                                        customerChangeID: widget
+                                            .customerChange.iD
+                                            .toString());
+
+                                ExtendedNavigator.root.pushAndRemoveUntil(
+                                    Routes.vCustomerDataChangeVerification,
+                                    (route) => false);
+                              },
+                            ),
+                            VSpacing(TSpacing * 2),
+                            WButton(
+                              backgroundColor: TColors.primary,
+                              textColor: TColors.primary[-3],
+                              text: "Terima",
+                              onTap: () async {
+                                await UCCustomerDataChangeVerification(context)
+                                    .acceptChange(
+                                        customerChangeID: widget
+                                            .customerChange.iD
+                                            .toString());
+                                ExtendedNavigator.root.pushAndRemoveUntil(
+                                    Routes.vCustomerDataChangeVerification,
+                                    (route) => false);
+                              },
+                            ),
+                            VSpacing(TSpacing * 4),
+                          ],
                         ),
-                      ),
-                      VSpacing(TSpacing * 3),
-                      WDataInformationTile(
-                        title: "ID Pelanggan",
-                        content: "12345678901234267890",
-                      ),
-                      WDataInformationTile(
-                        title: "Nama Pelanggan",
-                        content: "12345678901234267890",
-                      ),
-                      WDataInformationTile(
-                        title: "Alamat Lengkap",
-                        content:
-                            "Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, Alamat Lengkap, ",
-                      ),
-                      WDataInformationTile(
-                        title: "Tarif Daya",
-                        content: "900V R1",
-                      ),
-                      WDataInformationTile(
-                        title: "Nomor Tiang",
-                        content: "ABCDE1234567890",
-                      ),
-                      WDataInformationTile(
-                        title: "Merk KWH",
-                        content: "ABCDE1234567890",
-                      ),
-                      WDataInformationTile(
-                        title: "TH TERA KWH",
-                        content: "123456789.00",
-                      ),
-                      WDataLocation(),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.primary,
-                        isFilled: false,
-                        textColor: TColors.primary,
-                        text: "Informasi Gardu",
-                        onTap: () {},
-                      ),
-                      VSpacing(TSpacing * 3),
-                      Text(
-                        "Aksi",
-                        style: TTextStyle.medium(
-                          color: TColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.red,
-                        isFilled: false,
-                        textColor: TColors.red,
-                        text: "Tolak",
-                        onTap: () {},
-                      ),
-                      VSpacing(TSpacing * 2),
-                      WButton(
-                        backgroundColor: TColors.primary,
-                        textColor: TColors.primary[-3],
-                        text: "Terima",
-                        onTap: () {},
-                      ),
-                      VSpacing(TSpacing * 4),
-                    ],
-                  ),
                 ),
               ),
             )

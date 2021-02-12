@@ -1,4 +1,5 @@
 import 'package:atlok/core/models/MPowerRate.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/power_rates_data/usecases/u.power_rates_form.dart';
@@ -119,11 +120,16 @@ class _VPowerRatesFormState extends State<VPowerRatesForm> {
                                 context,
                                 powerRate: this._powerRate,
                               ).update();
+
+                              ExtendedNavigator.root.pushAndRemoveUntil(
+                                  Routes.vFindPowerRates, (route) => false);
                             } else {
                               await UCPowerRatesForm(
                                 context,
                                 powerRate: this._powerRate,
                               ).create();
+
+                              ExtendedNavigator.root.pop();
                             }
 
                             _formKey.currentState.reset();

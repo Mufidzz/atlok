@@ -61,7 +61,7 @@ class UCLogin {
     var sp = await SharedPreferences.getInstance();
     sp.setString(SPKey.token, this.token);
     sp.setInt(SPKey.access, dToken["acs"]);
-
-    ExtendedNavigator.root.replace(Routes.vFindCustomerData);
+    ExtendedNavigator.root.pushAndRemoveUntil(
+        Routes.vFindCustomerData, (Route<dynamic> route) => false);
   }
 }

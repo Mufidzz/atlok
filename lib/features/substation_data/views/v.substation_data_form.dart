@@ -1,4 +1,5 @@
 import 'package:atlok/core/models/MSubstation.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/substation_data/usecases/u.substation_data_form.dart';
@@ -139,11 +140,15 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                                 context,
                                 substation: this._substation,
                               ).update();
+
+                              ExtendedNavigator.root.pop();
                             } else {
                               await UCSubstationDataForm(
                                 context,
                                 substation: this._substation,
                               ).create();
+                              ExtendedNavigator.root.pushAndRemoveUntil(
+                                  Routes.vFindSubstationData, (route) => false);
                             }
 
                             _formKey.currentState.reset();

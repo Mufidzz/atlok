@@ -81,7 +81,8 @@ class WVerificationIcon extends StatelessWidget {
           onPressed: () async {
             await UCUserRegisterVerification(context)
                 .verifyUser(id: this.userId);
-            ExtendedNavigator.root.replace(Routes.vUserRegisterVerification);
+            ExtendedNavigator.root.pushAndRemoveUntil(
+                Routes.vUserRegisterVerification, (r) => false);
           },
         ),
         HSpacing(TSpacing * 4),
@@ -93,7 +94,12 @@ class WVerificationIcon extends StatelessWidget {
             color: TColors.red,
             size: 20,
           ),
-          onPressed: () {},
+          onPressed: () async {
+            await UCUserRegisterVerification(context)
+                .deleteUser(id: this.userId);
+            ExtendedNavigator.root.pushAndRemoveUntil(
+                Routes.vUserRegisterVerification, (r) => false);
+          },
         ),
       ],
     );

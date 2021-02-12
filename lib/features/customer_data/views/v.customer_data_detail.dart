@@ -128,7 +128,9 @@ class VCustomerDataDetail extends StatelessWidget {
                                   UCCustomerDataForm(context)
                                       .delete(id: customer.iD.toString())
                                       .then((value) => ExtendedNavigator.root
-                                          .replace(Routes.vFindCustomerData));
+                                          .pushAndRemoveUntil(
+                                              Routes.vFindCustomerData,
+                                              (route) => false));
                                 }
                               },
                             ),

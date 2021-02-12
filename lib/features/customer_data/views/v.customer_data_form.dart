@@ -2,6 +2,7 @@ import 'package:atlok/core/models/MCustomer.dart';
 import 'package:atlok/core/models/MDropdown.dart';
 import 'package:atlok/core/models/MPowerRate.dart';
 import 'package:atlok/core/models/MSubstation.dart';
+import 'package:atlok/core/routes/router.gr.dart';
 import 'package:atlok/core/themes/themes.dart';
 import 'package:atlok/core/utilities/UShowDialog.dart';
 import 'package:atlok/core/widgets/WDropdownWrapper.dart';
@@ -9,6 +10,7 @@ import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/customer_data/usecases/u.customer_data_form.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class VCustomerDataForm extends StatelessWidget {
   final MACustomer customer;
@@ -82,6 +84,9 @@ class _CustomerFormState extends State<CustomerForm> {
   MDropdown<MSubstation> _dsSubstation = new MDropdown();
   MDropdown<MPowerRate> _dsPowerRate = new MDropdown();
 
+  TextEditingController _latitudeController = new TextEditingController();
+  TextEditingController _longitudeController = new TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -92,6 +97,8 @@ class _CustomerFormState extends State<CustomerForm> {
           substation: new MSubstation(),
           powerRating: new MPowerRate(),
         );
+    _latitudeController.text = this._customer.latitude ?? "";
+    _longitudeController.text = this._customer.longitude ?? "";
   }
 
   @override
@@ -242,7 +249,8 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.latitude = v;
             },
-            initialValue: this._customer.latitude ?? "",
+            // initialValue: this._customer.latitude ?? "",
+            controller: _latitudeController,
           ),
           WTextField(
             icon: Icons.adjust_rounded,
@@ -252,7 +260,28 @@ class _CustomerFormState extends State<CustomerForm> {
             onChanged: (String v) {
               this._customer.longitude = v;
             },
-            initialValue: this._customer.longitude ?? "",
+            // initialValue: this._customer.longitude ?? "",
+            controller: _longitudeController,
+          ),
+          VSpacing(TSpacing * 2),
+          WButton(
+            backgroundColor: TColors.primary,
+            textColor: TColors.primary,
+            text: "Gunakan Lokasi Saat ini",
+            isFilled: false,
+            onTap: () {
+              final Geolocator geolocator = Geolocator()
+                ..forceAndroidLocationManager;
+
+              geolocator
+                  .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+                  .then((Position position) {
+                setState(() {
+                  _latitudeController.text = "${position.latitude}";
+                  _longitudeController.text = "${position.longitude}";
+                });
+              });
+            },
           ),
           VSpacing(TSpacing * 4),
           Text(
@@ -279,6 +308,8 @@ class _CustomerFormState extends State<CustomerForm> {
                     context,
                     customer: this._customer,
                   ).create();
+                  ExtendedNavigator.root.pushAndRemoveUntil(
+                      Routes.vFindCustomerData, (route) => false);
                 } else {
                   if (widget.userChange) {
                     this._customer.verified = false;
@@ -286,11 +317,14 @@ class _CustomerFormState extends State<CustomerForm> {
                       context,
                       customer: this._customer,
                     ).createUnverifiedChange();
+                    ExtendedNavigator.root.pushAndRemoveUntil(
+                        Routes.vFindCustomerData, (route) => false);
                   } else {
                     await UCCustomerDataForm(
                       context,
                       customer: this._customer,
                     ).update(id: widget.customer.iD.toString());
+                    ExtendedNavigator.root.pop();
                   }
                 }
 

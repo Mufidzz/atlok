@@ -55,6 +55,47 @@ class UCUserRegisterVerification {
     );
 
     if (response.statusCode != 200) {
+      if (response.statusCode == 423) {
+        await UDialog(context).showSingleButtonDialog(
+          title: "Verifikasi",
+          content: "Verifikasi Gagal, Kuota Pengguna Penuh",
+          buttonText: "OK",
+        );
+        this.error = response.body;
+        print(this.error);
+        return null;
+      }
+
+      await UDialog(context).showSingleButtonDialog(
+        title: "Verifikasi",
+        content: "Verifikasi Gagal",
+        buttonText: "OK",
+      );
+      this.error = response.body;
+      print(this.error);
+      return null;
+    }
+    await UDialog(context).showSingleButtonDialog(
+      title: "Verifikasi",
+      content: "Verifikasi Berhasil",
+      buttonText: "OK",
+    );
+
+    return;
+  }
+
+  Future<void> deleteUser({
+    @required int id,
+  }) async {
+    var response = await http.delete(
+      URL.DeleteUser(id.toString()),
+      headers: {
+        "TOKEN": await SharedPreferences.getInstance()
+            .then((value) => value.get(SPKey.token)),
+      },
+    );
+
+    if (response.statusCode != 200) {
       await UDialog(context).showSingleButtonDialog(
         title: "Verifikasi",
         content: "Verifikasi Gagal",

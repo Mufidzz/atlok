@@ -39,8 +39,9 @@ class WMainDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       onTap: () {
-                        ExtendedNavigator.root
-                            .replace(Routes.vFindCustomerData);
+                        ExtendedNavigator.root.pushAndRemoveUntil(
+                            Routes.vFindCustomerData,
+                            (Route<dynamic> route) => false);
                       },
                       title: Text(
                         "Cari Data",
@@ -59,8 +60,9 @@ class WMainDrawer extends StatelessWidget {
                           ),
                           ListTile(
                             onTap: () {
-                              ExtendedNavigator.root
-                                  .replace(Routes.vAdminDashboard);
+                              ExtendedNavigator.root.pushAndRemoveUntil(
+                                  Routes.vAdminDashboard,
+                                  (Route<dynamic> route) => false);
                             },
                             title: Text(
                               "Menu Admin",
@@ -80,7 +82,8 @@ class WMainDrawer extends StatelessWidget {
                       onTap: () {
                         SharedPreferences.getInstance()
                             .then((sp) => sp.clear());
-                        ExtendedNavigator.root.replace(Routes.vLogin);
+                        ExtendedNavigator.root.pushAndRemoveUntil(
+                            Routes.vLogin, (Route<dynamic> route) => false);
                       },
                       title: Text(
                         "Logout",

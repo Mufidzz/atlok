@@ -58,6 +58,17 @@ class UCCustomerDataForm {
     );
 
     if (response.statusCode != 200) {
+      if (response.statusCode == 409) {
+        await UDialog(context).showSingleButtonDialog(
+          title: "Data Pelanggan",
+          content:
+              "Data Sedang Dalam Proses Review Admin, Harap Menunggu Verifikasi",
+          buttonText: "OK",
+        );
+        this.error = response.body;
+        return;
+      }
+
       await UDialog(context).showSingleButtonDialog(
         title: "Data Pelanggan",
         content: "Pengajuan Perubahan Data Pelanggan Gagal",

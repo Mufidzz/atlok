@@ -25,6 +25,7 @@ import '../../features/user_data/views/v.manage_user.dart';
 import '../../features/verification/views/v.customer_data_change_verification.dart';
 import '../../features/verification/views/v.user_register_verification.dart';
 import '../models/MCustomer.dart';
+import '../models/MCustomerChange.dart';
 import '../models/MPowerRate.dart';
 import '../models/MSubstation.dart';
 
@@ -107,8 +108,13 @@ class RViews extends RouterBase {
       );
     },
     VCustomerDataChangeRequest: (data) {
+      final args =
+          data.getArgs<VCustomerDataChangeRequestArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => VCustomerDataChangeRequest(),
+        builder: (context) => VCustomerDataChangeRequest(
+          key: args.key,
+          customerChange: args.customerChange,
+        ),
         settings: data,
       );
     },
@@ -211,6 +217,14 @@ class RViews extends RouterBase {
 /// ************************************************************************
 /// Arguments holder classes
 /// *************************************************************************
+
+/// VCustomerDataChangeRequest arguments holder class
+class VCustomerDataChangeRequestArguments {
+  final Key key;
+  final MCustomerChange customerChange;
+  VCustomerDataChangeRequestArguments(
+      {this.key, @required this.customerChange});
+}
 
 /// VCustomerDataDetail arguments holder class
 class VCustomerDataDetailArguments {

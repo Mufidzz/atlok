@@ -52,6 +52,7 @@ class WTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final onChanged;
   final initialValue;
+  final TextEditingController controller;
 
   const WTextField({
     Key key,
@@ -71,6 +72,7 @@ class WTextField extends StatelessWidget {
     this.maxLines = 1,
     this.backgroundColor = Colors.white,
     this.initialValue,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -104,6 +106,7 @@ class WTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
         cursorColor: TColors.primary[3],

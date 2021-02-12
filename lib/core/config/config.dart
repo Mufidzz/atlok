@@ -1,5 +1,5 @@
 class URL {
-  static const _url = "http://192.168.1.15:50006";
+  static const _url = "https://atlok.ofcode.dev/api";
   static const Login = "$_url/auth/login";
   static const Register = "$_url/auth/register";
   static const CreateCustomer = "$_url/customer/";
@@ -9,11 +9,11 @@ class URL {
   // ignore: non_constant_identifier_names
   static SearchCustomer(String param, int start, int count,
           {List<String> ext}) =>
-      "$_url/customer/$param/search/$start/$count?${ext != null ? ext.join("&") : ""}";
+      "$_url/customer/${param == "" ? "-" : param}/search/$start/$count?${ext != null ? ext.join("&") : ""}";
 
   // ignore: non_constant_identifier_names
   static SearchSubstation(String param, int start, int count) =>
-      "$_url/substation/$param/search/$start/$count";
+      "$_url/substation/${param == "" ? "-" : param}/search/$start/$count";
 
   // ignore: non_constant_identifier_names
   static CreateCustomerChange(String id) => "$_url/customer-change/$id";
@@ -35,11 +35,18 @@ class URL {
 
   // ignore: non_constant_identifier_names
   static SearchPowerRate(String param, int start, int count) =>
-      "$_url/power-rating/$param/search/$start/$count";
+      "$_url/power-rating/${param == "" ? "-" : param}/search/$start/$count";
 
   // ignore: non_constant_identifier_names
   static GetCustomerChange(int start, int count) =>
       "$_url/customer-change/$start/$count";
+
+  // ignore: non_constant_identifier_names
+  static GetCustomer(String id) => "$_url/customer/$id";
+
+  // ignore: non_constant_identifier_names
+  static PatchCustomerChange(String id, bool accepted) =>
+      "$_url/customer-change/$id/${accepted ? "accept" : "deny"}";
 
   // ignore: non_constant_identifier_names
   static GetUnverifiedUsers(int start, int count) =>
@@ -47,6 +54,8 @@ class URL {
 
   // ignore: non_constant_identifier_names
   static VerifyUser(String id) => "$_url/user/verify/$id";
+  // ignore: non_constant_identifier_names
+  static DeleteUser(String id) => "$_url/user/$id";
 }
 
 class SPKey {

@@ -7,7 +7,8 @@ class UCAdminDashboard {
   }
 
   static void goToFindCustomer() {
-    ExtendedNavigator.root.push(Routes.vFindCustomerData);
+    ExtendedNavigator.root
+        .pushAndRemoveUntil(Routes.vFindCustomerData, (r) => false);
   }
 
   static void goToFindPowerRates() {

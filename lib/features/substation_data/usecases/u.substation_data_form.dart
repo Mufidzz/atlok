@@ -100,6 +100,7 @@ class UCSubstationDataForm {
       buttonText: "OK",
     );
 
-    ExtendedNavigator.root.replace(Routes.vFindSubstationData);
+    ExtendedNavigator.root
+        .pushAndRemoveUntil(Routes.vFindSubstationData, (r) => false);
   }
 }

@@ -17,7 +17,11 @@ class WCustomerDataChangeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        ExtendedNavigator.root.push(Routes.vCustomerDataChangeRequest,
+            arguments:
+                VCustomerDataChangeRequestArguments(customerChange: customer));
+      },
       child: Container(
         padding: EdgeInsets.only(
           top: TSpacing * 2,
