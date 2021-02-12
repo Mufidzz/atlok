@@ -5,6 +5,7 @@ import 'package:atlok/core/widgets/widgets.dart';
 import 'package:atlok/features/substation_data/usecases/u.substation_data_form.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class VSubstationDataForm extends StatefulWidget {
   final MSubstation substation;
@@ -17,12 +18,18 @@ class VSubstationDataForm extends StatefulWidget {
 class _VSubstationDataFormState extends State<VSubstationDataForm> {
   GlobalKey<FormState> _formKey;
   MSubstation _substation;
+
+  TextEditingController _latitudeController = new TextEditingController();
+  TextEditingController _longitudeController = new TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _formKey = GlobalKey<FormState>();
     _substation = widget.substation ?? new MSubstation();
+    _latitudeController.text = this._substation.latitude ?? "";
+    _longitudeController.text = this._substation.longitude ?? "";
   }
 
   @override
@@ -106,6 +113,7 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                             this._substation.latitude = v;
                           },
                           initialValue: _substation.latitude,
+                          controller: _latitudeController,
                         ),
                         WTextField(
                           icon: Icons.adjust_rounded,
@@ -116,6 +124,30 @@ class _VSubstationDataFormState extends State<VSubstationDataForm> {
                             this._substation.longitude = v;
                           },
                           initialValue: _substation.longitude,
+                          controller: _longitudeController,
+                        ),
+                        VSpacing(TSpacing * 2),
+                        WButton(
+                          backgroundColor: TColors.primary,
+                          textColor: TColors.primary,
+                          text: "Gunakan Lokasi Saat ini",
+                          isFilled: false,
+                          onTap: () {
+                            final Geolocator geolocator = Geolocator()
+                              ..forceAndroidLocationManager;
+
+                            geolocator
+                                .getCurrentPosition(
+                                    desiredAccuracy: LocationAccuracy.best)
+                                .then((Position position) {
+                              setState(() {
+                                _latitudeController.text =
+                                    "${position.latitude}";
+                                _longitudeController.text =
+                                    "${position.longitude}";
+                              });
+                            });
+                          },
                         ),
                         VSpacing(TSpacing * 4),
                         Text(
